@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wrench, PhoneCall, Mail, MapPin, Clock, ShieldCheck, Heart, Send } from 'lucide-react';
+import { Wrench, Mail, MapPin, Clock, ShieldCheck, Heart, Send } from 'lucide-react';
 
 export default function Footer({ onOpenBooking, onOpenTrack }) {
   return (
@@ -46,7 +46,6 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
             <h4 className="text-xs font-extrabold uppercase tracking-widest text-brand-orange">Navigation</h4>
             <ul className="space-y-2 text-xs font-semibold text-slate-400">
               <li><a href="#services" className="hover:text-white transition-colors">Services</a></li>
-              <li><a href="#estimator" className="hover:text-white transition-colors">Price Estimator</a></li>
               <li><a href="#why-us" className="hover:text-white transition-colors">Why Choose Us</a></li>
               <li><a href="#process" className="hover:text-white transition-colors">Repair Process</a></li>
               <li><a href="#reviews" className="hover:text-white transition-colors">Customer Reviews</a></li>
@@ -71,10 +70,6 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
           <div className="space-y-3">
             <h4 className="text-xs font-extrabold uppercase tracking-widest text-brand-orange">Contact & Hours</h4>
             <div className="space-y-2 text-xs text-slate-400 font-semibold">
-              <div className="flex items-center gap-2">
-                <PhoneCall className="w-4 h-4 text-brand-orange shrink-0" />
-                <a href="tel:18005553494" className="hover:text-white">(800) 555-FIXIT</a>
-              </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-orange shrink-0" />
                 <span>support@fixcraftpro.com</span>

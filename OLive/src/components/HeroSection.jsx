@@ -1,46 +1,41 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Calculator, ShieldCheck, Zap, Award, Star, CheckCircle, ArrowRight, Smartphone, Laptop, Wrench, Sparkles } from 'lucide-react';
+import { Calendar, ShieldCheck, Zap, Award, Star, CheckCircle, ArrowRight, Smartphone, Laptop, Wrench, Sparkles } from 'lucide-react';
 
-export default function HeroSection({ onOpenBooking, onScrollToEstimator }) {
+export default function HeroSection({ onOpenBooking }) {
   return (
-    <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden hero-mesh-bg">
-      {/* Decorative Glow Elements */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-navy/5 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-brand-orange/10 rounded-full blur-3xl pointer-events-none -z-10" />
+    <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden">
+      {/* Background Subtle Shapes */}
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-brand-orange/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-brand-navy/5 blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Content Column */}
-          <motion.div 
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-6 text-center lg:text-left"
-          >
-            {/* Top Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-navy/8 border border-brand-navy/15 text-brand-navy text-xs font-bold tracking-wide uppercase shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-brand-orange animate-ping" />
+          {/* Left Hero Content Column (7 cols) */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            
+            {/* Top Pill Tag */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-navy/5 border border-brand-navy/10 text-brand-navy text-xs font-extrabold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5 text-brand-orange" />
-              #1 Rated Express Device Service Center
+              #1 Express Mobile & Electronics Repair
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
-              Fast, Reliable Mobile Repairs <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-navy via-brand-navy-light to-brand-orange">
-                You Can Trust
+              Broken Screen? <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-brand-navy via-brand-navy-light to-brand-orange bg-clip-text text-transparent">
+                Fixed in 30 Minutes.
               </span>
             </h1>
 
-            {/* Subheading */}
-            <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            {/* Sub-headline */}
+            <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
               Screen replacements, battery replacements, water damage recovery, charging issues and more for smartphones, tablets & laptops.
             </p>
 
-            {/* Dual CTAs */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            {/* Hero CTA Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <button
                 onClick={() => onOpenBooking()}
                 className="w-full sm:w-auto orange-gradient-btn text-white px-8 py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 group shadow-orange-glow cursor-pointer"
@@ -48,14 +43,6 @@ export default function HeroSection({ onOpenBooking, onScrollToEstimator }) {
                 <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 Book Repair
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button
-                onClick={onScrollToEstimator}
-                className="w-full sm:w-auto px-7 py-4 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2.5 transition-all cursor-pointer"
-              >
-                <Calculator className="w-5 h-5 text-brand-navy" />
-                Get Free Quote
               </button>
             </div>
 
@@ -75,7 +62,7 @@ export default function HeroSection({ onOpenBooking, onScrollToEstimator }) {
               </div>
             </div>
 
-          </motion.div>
+          </div>
 
           {/* Right Side 3D Graphic Mockup & Floating Glass Cards */}
           <motion.div 

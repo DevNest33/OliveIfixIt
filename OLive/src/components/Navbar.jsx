@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Smartphone, Wrench, PhoneCall, Search, Calendar, Menu, X, ShieldCheck } from 'lucide-react';
+import { Smartphone, Wrench, Search, Calendar, Menu, X, ShieldCheck } from 'lucide-react';
 
 export default function Navbar({ onOpenBooking, onOpenTrack }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -19,7 +19,6 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
 
   const navLinks = [
     { name: 'Services', href: '#services' },
-    { name: 'Quote Calculator', href: '#estimator' },
     { name: 'Why FixCraft', href: '#why-us' },
     { name: 'Repair Process', href: '#process' },
     { name: 'Reviews', href: '#reviews' },
@@ -64,15 +63,6 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
 
           {/* Desktop Right CTA Area */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Quick Call */}
-            <a
-              href="tel:18005553494"
-              className="flex items-center gap-2 text-slate-700 hover:text-brand-navy px-3 py-2 rounded-lg text-sm font-semibold hover:bg-slate-100/70 transition-colors"
-            >
-              <PhoneCall className="w-4 h-4 text-brand-orange" />
-              <span className="hidden xl:inline">(800) 555-FIXIT</span>
-            </a>
-
             {/* Track Repair Button */}
             <button
               onClick={onOpenTrack}
