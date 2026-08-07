@@ -16,9 +16,9 @@ export default function ProcessSection({ onOpenBooking }) {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-extrabold uppercase tracking-wider">
+          {/* <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-extrabold uppercase tracking-wider">
             Seamless & Simple
-          </div>
+          </div> */}
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
             How The Repair <span className="text-brand-orange">Process Works</span>
           </h2>

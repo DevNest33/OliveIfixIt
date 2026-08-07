@@ -4,7 +4,8 @@ import {
   X, CheckCircle2, Calendar, Clock, MapPin, Smartphone, Wrench, ShieldCheck, 
   ArrowRight, ArrowLeft, Truck, Store, Sparkles, User, Mail, Phone, FileText 
 } from 'lucide-react';
-import { DEVICE_CATEGORIES, DEVICE_BRANDS, DEVICE_MODELS, REPAIR_ISSUES } from '../data/repairData';
+import { DEVICE_CATEGORIES, DEVICE_BRANDS, DEVICE_MODELS, REPAIR_ISSUES, MODEL_PRICING_MAP } from '../data/repairData';
+
 
 export default function BookingModal({ isOpen, onClose, initialSelection }) {
   const [step, setStep] = useState(1);
@@ -40,8 +41,8 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
   if (!isOpen) return null;
 
   const currentIssue = REPAIR_ISSUES.find((i) => i.id === issueId) || REPAIR_ISSUES[0];
-  let multiplier = category === 'laptop' ? 1.6 : category === 'tablet' ? 1.3 : 1;
-  const estimatedPrice = Math.round(currentIssue.basePrice * multiplier);
+  const modelPrice = MODEL_PRICING_MAP[model]?.prices?.[issueId];
+  const displayPrice = modelPrice != null ? `$${modelPrice}` : 'Quote upon inspection';
 
   const locations = [
     'Downtown Flagship Hub (124 Tech Way)',
@@ -85,7 +86,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
             </div>
             <div>
               <h3 className="text-base font-bold">Book Repair Appointment</h3>
-              <p className="text-[11px] text-slate-400">Instant scheduling & 1-Year Warranty</p>
+              <p className="text-[11px] text-slate-400">Instant scheduling & 3-Month Warranty</p>
             </div>
           </div>
 
@@ -148,7 +149,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                   </div>
                   <div>
                     <span className="text-slate-400 block">Estimated Cost</span>
-                    <strong className="text-slate-900">${estimatedPrice}</strong>
+                    <strong className="text-slate-900">{displayPrice}</strong>
                   </div>
                 </div>
               </div>
@@ -240,20 +241,33 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                           }`}
                         >
                           <span>{iss.title}</span>
-                          <span className="text-brand-orange font-bold">${Math.round(iss.basePrice * multiplier)}</span>
+                          <span className="text-slate-400 font-medium text-[11px]">{iss.timeEst}</span>
                         </button>
                       ))}
                     </div>
                   </div>
+                  <div className='pt-4 flex items-center gap-4' > 
 
-                  <div className="pt-4 flex justify-end">
+
+                    <div className="w-3/4
+                                    bg-slate-50
+                                    border
+                                    border-slate-200
+                                    rounded-xl
+                                    p-3
+                                    text-xs
+                                    text-slate-600
+                                    font-medium">
+                      <p>Our repairs use carefully tested, orignal and  compatible parts. When genuine original parts are available through our suppliers, we'll notify you before the repair</p>
+                    </div>
                     <button
                       type="button"
                       onClick={() => setStep(2)}
                       className="orange-gradient-btn text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2"
-                    >
+                      >
                       Next: Service Mode <ArrowRight className="w-4 h-4" />
                     </button>
+                    
                   </div>
                 </div>
               )}
@@ -453,7 +467,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                     </div>
                     <div className="flex justify-between text-slate-700">
                       <span>Schedule: <strong>{selectedDate} ({selectedTime})</strong></span>
-                      <span className="text-brand-orange font-extrabold text-sm">Total: ${estimatedPrice}</span>
+                      <span className="text-brand-orange font-extrabold text-sm">Est. Price: {displayPrice}</span>
                     </div>
                   </div>
 

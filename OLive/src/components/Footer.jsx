@@ -21,7 +21,7 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
             </a>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              The premier express repair center for smartphones, tablets, and laptops. Factory-certified engineers, original OEM grade components, and 1-year zero-cost warranty protection.
+              The premier express repair center for smartphones, tablets, and laptops. Factory-certified engineers, original OEM grade components, and 3-month zero-cost warranty protection.
             </p>
 
             <div className="flex items-center gap-3 pt-2">

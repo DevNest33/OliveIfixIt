@@ -25,7 +25,7 @@ export default function CtaBanner({ onOpenBooking }) {
             </h2>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Book your appointment online in under 60 seconds or bring your device straight to our repair lab. Most standard repairs done in 30 minutes!
+              Book your appointment online in under 60 seconds or bring your device straight to our repair lab. Fast, reliable quality repair service!
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-slate-300 font-semibold">

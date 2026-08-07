@@ -35,7 +35,7 @@ export default function ReviewsSection() {
             Loved By <span className="text-brand-orange">Thousands</span> Of Device Owners
           </h2>
           <p className="text-slate-300 text-base sm:text-lg">
-            See what real customers say about our 30-minute turnarounds, transparent pricing, and master craftsmanship.
+            See what real customers say about our fast turnarounds, transparent pricing, and master craftsmanship.
           </p>
         </div>
 

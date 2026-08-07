@@ -55,6 +55,38 @@ export const DEVICE_MODELS = {
   'galaxy-watch': ['Galaxy Watch 6 Classic', 'Galaxy Watch 5 Pro']
 };
 
+/**
+ * Mapping of all device models to their category, brand, and future vendor prices.
+ * Modify the prices object values when committed vendor pricing is available.
+ */
+export const MODEL_PRICING_MAP = {};
+
+Object.entries(DEVICE_MODELS).forEach(([brandId, models]) => {
+  const categoryId = Object.keys(DEVICE_BRANDS).find(cat => 
+    DEVICE_BRANDS[cat].some(b => b.id === brandId)
+  ) || 'smartphone';
+
+  models.forEach(modelName => {
+    MODEL_PRICING_MAP[modelName] = {
+      category: categoryId,
+      brand: brandId,
+      model: modelName,
+      // Vendor price per repair issue ID (set values here when vendor pricing is finalized)
+      prices: {
+        screen: null,
+        battery: null,
+        charging: null,
+        water: null,
+        camera: null,
+        speaker: null,
+        software: null,
+        data: null
+      }
+    };
+  });
+});
+
+
 export const REPAIR_ISSUES = [
   { 
     id: 'screen', 
@@ -131,36 +163,36 @@ export const REPAIR_ISSUES = [
 ];
 
 export const TRUST_METRICS = [
-  { label: 'Devices Repaired', value: '5,000+', suffix: 'With 99.4% Success', icon: 'Wrench' },
-  { label: 'Customer Rating', value: '4.9★', suffix: 'Based on 1,800+ Reviews', icon: 'Star' },
-  { label: 'Average Repair Time', value: '30 Min', suffix: 'Express On-Site Fix', icon: 'Clock' },
-  { label: 'Warranty Covered', value: '1 Year', suffix: 'Full Parts & Labor Guarantee', icon: 'ShieldCheck' }
+  { label: 'Devices Repaired', value: '4,500+', suffix: 'With 100% Success', icon: 'Wrench' },
+  { label: 'Customer Rating', value: '5★', suffix: 'Based on 80+ Reviews', icon: 'Star' },
+  { label: 'Average Repair Time', value: '1 Day', suffix: 'Keeping You Connected', icon: 'Clock' },
+  { label: 'Warranty Covered', value: '3 Months', suffix: 'T&C Apply', icon: 'ShieldCheck' }
 ];
 
 export const WHY_CHOOSE_US = [
   {
-    title: 'Certified Technicians',
-    description: 'Every repair is conducted by Apple iTech & Samsung Master Certified engineers with over 8+ years experience.',
+    title: 'Experienced Repair Specialists',
+    description: 'Every repair is handled by trained technicians using professional repair procedures and quality-tested tools.',
     icon: 'BadgeCheck',
-    badge: 'Expert Team'
+    badge: 'CERTIFIED TECHNICIANS'
   },
   {
-    title: '100% Genuine OEM Parts',
-    description: 'We source only original grade-A screens, batteries, and micro-components backed by factory specification tests.',
+    title: 'High-Quality Compatible Parts',
+    description: 'We use carefully tested premium compatible replacement parts. If a genuine original part is available, we\'ll let you know before your repair.',
     icon: 'ShieldCheck',
-    badge: 'Original Parts'
+    badge: 'PREMIUM PARTS'
   },
   {
-    title: '30-Minute Express Service',
-    description: 'Most screen and battery replacements are completed in under 30 minutes while you relax in our comfortable lounge.',
+    title: 'Quick Diagnosis & Repair',
+    description: 'We inspect your device, explain the issue, and begin repairs as quickly as possible. Repair times vary depending on the device and the issue.',
     icon: 'Zap',
-    badge: 'Same-Day Fix'
+    badge: 'FAST SERVICE'
   },
   {
-    title: 'Transparent & Affordable',
-    description: 'No hidden fees or surprise charges. Get an exact free upfront quote before any work starts on your device.',
+    title: 'No Hidden Charges',
+    description: 'You\'ll receive a clear repair estimate before any work begins, so you always know what you\'re paying for.',
     icon: 'DollarSign',
-    badge: 'No Hidden Fees'
+    badge: 'Upfront Estimates'
   }
 ];
 
@@ -184,12 +216,12 @@ export const REPAIR_PROCESS_STEPS = [
     title: 'Precision Repair',
     desc: 'Our certified master tech inspects, cleans, and replaces faulty components using precision laser tooling.',
     icon: 'Wrench',
-    timeEst: '30 Minutes'
+    timeEst: 'Same Day'
   },
   {
     step: '04',
     title: 'Collect & 1-Yr Guarantee',
-    desc: 'Test your revived device with 24-point quality inspection and walk away with our 1-year hassle-free warranty.',
+    desc: 'Test your revived device with 24-point quality inspection and walk away with our 3-month hassle-free warranty.',
     icon: 'CheckCircle2',
     timeEst: 'Complete'
   }
@@ -229,7 +261,7 @@ export const CUSTOMER_REVIEWS = [
     date: '2 weeks ago',
     device: 'Samsung Galaxy S24 Ultra',
     service: 'Battery Replacement',
-    review: 'Battery was dying in 4 hours. Brought it in during lunch hour. Got original Samsung cell replacement in 25 mins and now getting 1.5 days full usage again. The 1-year warranty gives total peace of mind.',
+    review: 'Battery was dying in 4 hours. Brought it in during lunch hour. Got original Samsung cell replacement in 25 mins and now getting 1.5 days full usage again. The 3-month warranty gives total peace of mind.',
     verified: true
   },
   {
@@ -256,8 +288,8 @@ export const FAQS = [
   {
     id: 2,
     category: 'Warranty',
-    question: 'What does the 1-Year Warranty cover?',
-    answer: 'Our 1-year warranty covers all parts installed and labor craftsmanship. If the replaced component develops any manufacturing defect or touch malfunction without physical/water damage, we replace it completely free of charge.'
+    question: 'What does the 3-Month Warranty cover?',
+    answer: 'Our 3-month warranty covers all parts installed and labor craftsmanship. If the replaced component develops any manufacturing defect or touch malfunction without physical/water damage, we replace it completely free of charge.'
   },
   {
     id: 3,

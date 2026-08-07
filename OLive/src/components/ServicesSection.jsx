@@ -22,7 +22,7 @@ export default function ServicesSection({ onSelectService }) {
   const tabs = [
     { id: 'all', label: 'All Repairs' },
     { id: 'popular', label: 'Most Popular' },
-    { id: 'express', label: 'Express (Under 30 Min)' },
+    { id: 'express', label: 'Express Service' },
   ];
 
   const filteredServices = REPAIR_ISSUES.filter((item) => {
@@ -37,9 +37,9 @@ export default function ServicesSection({ onSelectService }) {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-navy/10 text-brand-navy text-xs font-bold uppercase tracking-wider">
+          {/* <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-navy/10 text-brand-navy text-xs font-bold uppercase tracking-wider">
             Comprehensive Solutions
-          </div>
+          </div> */}
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
             Professional Repair <span className="text-brand-navy">Services</span>
           </h2>
@@ -97,26 +97,12 @@ export default function ServicesSection({ onSelectService }) {
                 </div>
 
                 {/* Card Footer */}
-                <div className="mt-6 pt-5 border-t border-slate-100 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs text-slate-400 font-medium block">Starts from</span>
-                      <span className="text-2xl font-extrabold text-slate-900">${service.basePrice}</span>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-xs text-slate-400 font-medium block flex items-center justify-end gap-1">
-                        <Clock className="w-3 h-3 text-brand-orange" /> Time
-                      </span>
-                      <span className="text-xs font-bold text-slate-700">{service.timeEst}</span>
-                    </div>
-                  </div>
-
+                <div className="mt-6 pt-5 border-t border-slate-100">
                   <button
                     onClick={() => onSelectService(service)}
                     className="w-full py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-brand-navy group-hover:bg-brand-orange group-hover:text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                   >
-                    <span>Get Exact Quote</span>
+                    <span>Book Now</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
@@ -142,7 +128,7 @@ export default function ServicesSection({ onSelectService }) {
             onClick={() => onSelectService(null)}
             className="orange-gradient-btn text-white px-6 py-3 rounded-xl font-bold text-sm shrink-0 flex items-center gap-2 shadow-md cursor-pointer"
           >
-            Free Diagnostic Check
+            Book Now
           </button>
         </div>
 

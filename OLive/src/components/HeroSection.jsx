@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, ShieldCheck, Zap, Award, Star, CheckCircle, ArrowRight, Smartphone, Laptop, Wrench, Sparkles } from 'lucide-react';
+import { Calendar, ShieldCheck, Zap, Award, Star, CheckCircle, ArrowRight, Smartphone, Laptop, Sparkles, Wrench } from 'lucide-react';
+import screwdriverImg from '../assets/screwdriver.png';
 
 export default function HeroSection({ onOpenBooking }) {
   return (
@@ -11,10 +12,10 @@ export default function HeroSection({ onOpenBooking }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
+
           {/* Left Hero Content Column (7 cols) */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            
+
             {/* Top Pill Tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-navy/5 border border-brand-navy/10 text-brand-navy text-xs font-extrabold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5 text-brand-orange" />
@@ -23,9 +24,9 @@ export default function HeroSection({ onOpenBooking }) {
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
-              Broken Screen? <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-brand-navy via-brand-navy-light to-brand-orange bg-clip-text text-transparent">
-                Fixed in 30 Minutes.
+              Broken screen? <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-brand-navy via-brand-navy-light to-brand-orange bg-clip-text text-transparent inline-flex items-center gap-0.5">
+                Just if<img src={screwdriverImg} alt="screwdriver icon" className="inline-block w-5 h-12 object-contain align-middle   translate-y-1" />xit
               </span>
             </h1>
 
@@ -54,18 +55,18 @@ export default function HeroSection({ onOpenBooking }) {
               </div>
               <div className="flex items-center gap-1.5">
                 <Zap className="w-4 h-4 text-brand-orange" />
-                <span><strong className="text-slate-900">30 Min</strong> Avg Turnaround</span>
+                <span><strong className="text-slate-900">Express</strong> Turnaround</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-brand-navy" />
-                <span><strong className="text-slate-900">1 Year</strong> Warranty</span>
+                <span><strong className="text-slate-900">3 Months</strong> Warranty</span>
               </div>
             </div>
 
           </div>
 
           {/* Right Side 3D Graphic Mockup & Floating Glass Cards */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
@@ -80,7 +81,7 @@ export default function HeroSection({ onOpenBooking }) {
               {/* Tech Illustration Canvas - Smartphone & Laptop SVG Visual */}
               <div className="relative z-10 w-full h-full flex items-center justify-center p-4">
                 <div className="w-full h-full rounded-3xl glass-panel p-6 shadow-2xl relative flex flex-col justify-between overflow-hidden border border-white/60">
-                  
+
                   {/* Top Bar inside Card Illustration */}
                   <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
                     <div className="flex items-center gap-2">
@@ -114,8 +115,8 @@ export default function HeroSection({ onOpenBooking }) {
                     <div className="absolute -right-2 -bottom-2 w-28 h-52 bg-slate-900 rounded-2xl p-1.5 shadow-2xl border-2 border-slate-700 transform rotate-6 hover:rotate-0 transition-transform duration-500">
                       <div className="w-full h-full bg-slate-800 rounded-xl overflow-hidden relative flex flex-col justify-between p-2">
                         {/* Notch */}
-                        <div className="w-10 h-2 bg-slate-900 rounded-full mx-auto" />
-                        
+                        <div className="w-10 h-2 bg-slate-900 rounded-full mx-auto" ></div>
+
                         <div className="text-center my-auto space-y-1">
                           <Wrench className="w-8 h-8 text-brand-orange mx-auto animate-bounce" />
                           <p className="text-[10px] font-bold text-white">OLED Express</p>
@@ -155,7 +156,8 @@ export default function HeroSection({ onOpenBooking }) {
                     <CheckCircle className="w-4 h-4 text-emerald-500" />
                     <span className="text-sm font-extrabold text-slate-900">Same Day Repair</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 font-medium">Under 30 Min Average</p>
+                  <p className="text-[11px] text-slate-500 font-medium">Fast Turnaround</p>
+                  
                 </div>
               </motion.div>
 
@@ -189,7 +191,7 @@ export default function HeroSection({ onOpenBooking }) {
                 <div>
                   <div className="flex items-center gap-1">
                     <CheckCircle className="w-4 h-4 text-brand-orange" />
-                    <span className="text-sm font-extrabold text-slate-900">1-Year Warranty</span>
+                    <span className="text-sm font-extrabold text-slate-900">3-Month Warranty</span>
                   </div>
                   <p className="text-[11px] text-slate-500 font-medium">Zero Cost Protection</p>
                 </div>
