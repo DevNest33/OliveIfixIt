@@ -23,14 +23,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text selection:bg-brand-orange selection:text-white flex flex-col font-sans">
-      {/* Sticky Navbar */}
+    <div className="min-h-screen bg-black text-white selection:bg-brand-gold selection:text-black flex flex-col font-sans">
       <Navbar 
         onOpenBooking={() => handleOpenBooking()} 
         onOpenTrack={() => setTrackOpen(true)} 
       />
 
-      {/* Main Content Sections */}
       <main className="flex-grow">
         <HeroSection 
           onOpenBooking={() => handleOpenBooking()} 
@@ -59,13 +57,11 @@ export default function App() {
         />
       </main>
 
-      {/* Footer */}
       <Footer 
         onOpenBooking={() => handleOpenBooking()} 
         onOpenTrack={() => setTrackOpen(true)} 
       />
 
-      {/* Interactive Modals */}
       <BookingModal 
         isOpen={bookingOpen} 
         onClose={() => setBookingOpen(false)} 
