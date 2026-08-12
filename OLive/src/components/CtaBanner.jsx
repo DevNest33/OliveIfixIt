@@ -14,7 +14,7 @@ export default function CtaBanner({ onOpenBooking }) {
           <div className="space-y-3 text-center lg:text-left relative z-10 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-extrabold uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5" />
-              Fast Turnaround Guaranteed
+              Fast Turnaround Guaranteed 
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">

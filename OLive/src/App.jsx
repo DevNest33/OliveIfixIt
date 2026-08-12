@@ -7,7 +7,6 @@ import WhyChooseUsSection from './components/WhyChooseUsSection';
 import ProcessSection from './components/ProcessSection';
 import ReviewsSection from './components/ReviewsSection';
 import FAQSection from './components/FAQSection';
-import CtaBanner from './components/CtaBanner';
 import Footer from './components/Footer';
 import BookingModal from './components/BookingModal';
 import TrackRepairModal from './components/TrackRepairModal';
@@ -52,9 +51,6 @@ export default function App() {
 
         <FAQSection />
 
-        <CtaBanner 
-          onOpenBooking={() => handleOpenBooking()} 
-        />
       </main>
 
       <Footer 

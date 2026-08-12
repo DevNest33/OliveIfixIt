@@ -39,7 +39,7 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
-                Fix<span className="text-brand-gold">Craft</span>
+                Olive<span className="text-brand-gold">Craft</span>
                 <span className="text-[10px] font-semibold uppercase tracking-wider bg-brand-gold/10 text-brand-gold px-1.5 py-0.5 rounded ml-1">Pro</span>
               </span>
               <span className="text-[10px] text-gray-500 font-medium -mt-1">Express Mob Repairs</span>

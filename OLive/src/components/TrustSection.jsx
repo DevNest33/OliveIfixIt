@@ -21,8 +21,6 @@ export default function TrustSection() {
 
   return (
     <section className="py-12 bg-black text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-black via-brand-black-lighter to-brand-black opacity-90" />
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -32,7 +30,7 @@ export default function TrustSection() {
             return (
               <div
                 key={idx}
-                className="glass-panel-dark p-6 rounded-2xl border border-brand-gold/10 hover:border-brand-gold/40 transition-all duration-300 transform hover:-translate-y-1 group"
+                className="bg-black p-6 rounded-2xl border border-brand-gold/10 hover:border-brand-gold/40 transition-all duration-300 transform hover:-translate-y-1 group"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-white/10 group-hover:bg-brand-gold text-brand-gold group-hover:text-black flex items-center justify-center transition-colors duration-300">
