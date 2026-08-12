@@ -1,21 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CUSTOMER_REVIEWS } from '../data/repairData';
 import { Star, CheckCircle, Quote, ThumbsUp, Sparkles } from 'lucide-react';
 
 export default function ReviewsSection() {
-  const [activeFilter, setActiveFilter] = useState('all');
-
   const filters = [
     { id: 'all', label: 'All Reviews (4.9★)' },
-    { id: 'screen', label: 'Screen Repairs' },
-    { id: 'laptop', label: 'MacBook & Laptops' },
   ];
 
-  const filteredReviews = CUSTOMER_REVIEWS.filter((rev) => {
-    if (activeFilter === 'screen') return rev.service.includes('Screen');
-    if (activeFilter === 'laptop') return rev.device.includes('MacBook') || rev.device.includes('Laptop');
-    return true;
-  });
+  const filteredReviews = CUSTOMER_REVIEWS;
 
   return (
     <section id="reviews" className="py-20 bg-black text-white relative overflow-hidden">
@@ -41,12 +33,7 @@ export default function ReviewsSection() {
           {filters.map((f) => (
             <button
               key={f.id}
-              onClick={() => setActiveFilter(f.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeFilter === f.id
-                  ? 'bg-brand-gold text-black shadow-lg'
-                  : 'bg-gray-900 text-gray-400 hover:bg-gray-800 border border-gray-800'
-              }`}
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black shadow-lg cursor-pointer"
             >
               {f.label}
             </button>

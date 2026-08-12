@@ -28,7 +28,7 @@ export default function CtaBanner({ onOpenBooking }) {
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-gray-400 font-semibold">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-brand-gold" />
-                1-Year Guarantee Included
+                3 months Guarantee Included
               </span>
               <span className="flex items-center gap-1.5">
                 <Zap className="w-4 h-4 text-emerald-400" />

@@ -72,8 +72,8 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
               <div className="flex items-start gap-2 pt-1">
                 <Clock className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="block font-bold text-white">Mon - Sat: 8:00 AM - 8:00 PM</span>
-                  <span className="block text-gray-500">Sun: 10:00 AM - 5:00 PM</span>
+                  <span className="block font-bold text-white">Mon - Fri: 10:00 AM - 6:30 PM</span>
+                  <span className="block text-gray-500">Sun: closed </span>
                 </div>
               </div>
             </div>

@@ -216,12 +216,12 @@ export const REPAIR_PROCESS_STEPS = [
     title: 'Precision Repair',
     desc: 'Our certified master tech inspects, cleans, and replaces faulty components using precision laser tooling.',
     icon: 'Wrench',
-    timeEst: 'Same Day'
+    timeEst: '24 hours'
   },
   {
     step: '04',
-    title: 'Collect & 1-Yr Guarantee',
-    desc: 'Test your revived device with 24-point quality inspection and walk away with our 3-month hassle-free warranty.',
+    title: 'Collect & 3-month Guarantee',
+    desc: 'Test your revived device with \n 24-point quality inspection and walk away with our 3-month hassle-free warranty.',
     icon: 'CheckCircle2',
     timeEst: 'Complete'
   }
@@ -283,7 +283,7 @@ export const FAQS = [
     id: 1,
     category: 'General',
     question: 'How long does a typical smartphone repair take?',
-    answer: 'Most standard repairs like screen and battery replacements take between 20 to 40 minutes. You can wait in our lounge with free espresso and Wi-Fi while our technician works on your device.'
+    answer: 'Most standard repairs like screen and battery replacements take between 24-36 hours'
   },
   {
     id: 2,
@@ -312,8 +312,8 @@ export const FAQS = [
   {
     id: 6,
     category: 'Service Mode',
-    question: 'How does the Mobile Doorstep / Mail-In service work?',
-    answer: 'For Doorstep service, our mobile van equipped with a cleanroom lab comes directly to your location. For Mail-In, we send you a pre-paid insured shipping box. Once received, we repair and ship it back within 24 hours.'
+    question: 'How does the Mobile Doorstep / Drop-in service work?',
+    answer: 'You can bring your device directly to our service centre, or use our pickup service. Pickup is free within 5 km of our centre. For locations beyond 5 km, an additional pickup fee may apply based on the distance.'
   }
 ];
 
