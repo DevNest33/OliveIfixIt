@@ -230,50 +230,50 @@ export const REPAIR_PROCESS_STEPS = [
 export const CUSTOMER_REVIEWS = [
   {
     id: 1,
-    name: 'Marcus Vance',
-    role: 'Product Designer',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    name: 'Yuvaraj Rajendran',
+    role: 'Local Guide · 113 reviews',
+    avatar: 'https://ui-avatars.com/api/?name=Yuvaraj+Rajendran&background=D4AF37&color=000&size=200&bold=true',
     rating: 5,
-    date: '2 days ago',
-    device: 'iPhone 15 Pro Max',
-    service: 'Screen Replacement',
-    review: 'Shattered my screen 45 minutes before an important client meeting. Olive ifixit repaired it in 22 minutes flat! Screen color and touch response are identical to brand new. Absolutely lifesaving team!',
+    date: '3 years ago',
+    device: 'Laptop',
+    service: 'HDD Detection Repair',
+    review: 'I took my laptop as my system was not detecting the hdd. Within 40 mins they resolved the issue and handed over the laptop. Thanks to olivecare.',
     verified: true
   },
   {
     id: 2,
-    name: 'Elena Rostova',
-    role: 'Software Engineer',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200',
+    name: 'Mirza Zakir Baig',
+    role: 'Local Guide · 15 reviews',
+    avatar: 'https://ui-avatars.com/api/?name=Mirza+Zakir+Baig&background=D4AF37&color=000&size=200&bold=true',
     rating: 5,
-    date: '1 week ago',
-    device: 'MacBook Air M2',
-    service: 'Water Damage Recovery',
-    review: 'Spilled coffee over my MacBook keyboard. Local Apple store told me I needed a full board replacement for $1,200. Olive ifixit ultrasonic cleaned the board and replaced two caps for a fraction of the cost. 100% working!',
+    date: '1 year ago',
+    device: 'Laptop',
+    service: 'Laptop Repair',
+    review: 'I recently had my laptop repaired by Olive Care - Gadget Repair and Servicing, and I couldn\'t be more pleased with the experience. Mr. Naser was highly professional and went above and beyond to ensure everything was handled smoothly.',
     verified: true
   },
   {
     id: 3,
-    name: 'David Chen',
-    role: 'Financial Analyst',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
+    name: 'Harish J',
+    role: 'Local Guide · 29 reviews',
+    avatar: 'https://ui-avatars.com/api/?name=Harish+J&background=D4AF37&color=000&size=200&bold=true',
     rating: 5,
-    date: '2 weeks ago',
-    device: 'Samsung Galaxy S24 Ultra',
-    service: 'Battery Replacement',
-    review: 'Battery was dying in 4 hours. Brought it in during lunch hour. Got original Samsung cell replacement in 25 mins and now getting 1.5 days full usage again. The 3-month warranty gives total peace of mind.',
+    date: '2 years ago',
+    device: 'Samsung Galaxy S9',
+    service: 'Mobile Repair',
+    review: 'I have received best service to my Samsung Galaxy S9 mobile from Olive care center, Banjara Hills. I really recommend this service center with full satisfaction of my mobile S9 service. Thank you guys.',
     verified: true
   },
   {
     id: 4,
-    name: 'Sophia Patel',
-    role: 'Photographer',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200',
+    name: 'Mellacheruvu Kalyan Ram',
+    role: 'Google Reviewer · 4 reviews',
+    avatar: 'https://ui-avatars.com/api/?name=Kalyan+Ram&background=D4AF37&color=000&size=200&bold=true',
     rating: 5,
-    date: '3 weeks ago',
-    device: 'iPad Pro 12.9"',
-    service: 'Data Recovery',
-    review: 'Recovered over 10,000 un-backed-up client photos from a completely dead iPad motherboard. Their micro-soldering team is top notch in the business!',
+    date: '4 years ago',
+    device: 'Laptop',
+    service: 'Performance Upgrade & Delivery',
+    review: 'My laptop had performance issues and I got the examination done by OliveCare. The representative Abdul Baseer did an excellent job - from recommending best upgrade plan to picking and delivering. The entire experience from calling their office to getting the upgraded laptop in my hands was great. I shall get back to OliveCare for my future needs and also recommend their services to others.',
     verified: true
   }
 ];
@@ -316,40 +316,3 @@ export const FAQS = [
     answer: 'You can bring your device directly to our service centre, or use our pickup service. Pickup is free within 5 km of our centre. For locations beyond 5 km, an additional pickup fee may apply based on the distance.'
   }
 ];
-
-export const SAMPLE_TRACKING_ORDERS = {
-  'FIX-9821': {
-    id: 'FIX-9821',
-    device: 'iPhone 15 Pro Max',
-    issue: 'OLED Display & Back Glass',
-    customerName: 'Marcus V.',
-    status: 'In Repair',
-    step: 3,
-    steps: [
-      { name: 'Order Received & Checked In', time: '10:15 AM Today', done: true },
-      { name: 'Initial 24-Point Diagnostics', time: '10:30 AM Today', done: true },
-      { name: 'Precision Assembly & Parts Swap', time: 'In Progress...', current: true },
-      { name: 'Quality Assurance & Waterproof Seal', time: 'Pending', done: false },
-      { name: 'Ready for Collection', time: 'Est. 11:30 AM', done: false }
-    ],
-    tech: 'Master Tech Alex Mercer',
-    estimatedCompletion: 'Today at 11:30 AM'
-  },
-  'FIX-8840': {
-    id: 'FIX-8840',
-    device: 'MacBook Air M2',
-    issue: 'Logic Board Ultrasonic Clean',
-    customerName: 'Elena R.',
-    status: 'Quality Check',
-    step: 4,
-    steps: [
-      { name: 'Order Received & Checked In', time: 'Yesterday', done: true },
-      { name: 'Initial 24-Point Diagnostics', time: 'Yesterday', done: true },
-      { name: 'Precision Assembly & Parts Swap', time: 'Today 9:00 AM', done: true },
-      { name: 'Quality Assurance & Burn-In Test', time: 'In Progress...', current: true },
-      { name: 'Ready for Collection', time: 'Est. 12:15 PM', done: false }
-    ],
-    tech: 'Senior Eng. Sarah Connor',
-    estimatedCompletion: 'Today at 12:15 PM'
-  }
-};

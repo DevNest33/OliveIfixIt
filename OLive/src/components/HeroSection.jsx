@@ -19,13 +19,14 @@ export default function HeroSection({ onOpenBooking }) {
   const targetRef = useRef({
     x: 0.5,
     y: 0.5,
-    active: false,
+    active: true,
+    manual: false,
   });
 
   const currentRef = useRef({
     x: 0.5,
     y: 0.5,
-    opacity: 0,
+    opacity: 0.85,
   });
 
   const [, forceRender] = useState(0);
@@ -75,12 +76,14 @@ export default function HeroSection({ onOpenBooking }) {
 
 
       targetRef.current.active = true;
+      targetRef.current.manual = true;
     };
 
 
     const handleMouseLeave = () => {
 
-      targetRef.current.active = false;
+      // Keep ambient glow sweeping — do not hide on leave
+      targetRef.current.manual = false;
 
     };
 
@@ -111,21 +114,22 @@ export default function HeroSection({ onOpenBooking }) {
       const current =
         currentRef.current;
 
-      // Mobile: auto-sweep glow since hover/cursor tracking isn't available
-      if (isTouch && !reducedMotion) {
+      // Always auto-sweep so only parts of REPAIR are lit without requiring hover
+      if (!reducedMotion && !target.manual) {
         const t = Date.now() / 1000;
-        target.x = 0.5 + Math.sin(t * 0.5) * 0.3;
-        target.y = 0.5 + Math.cos(t * 0.4) * 0.15;
-        target.active = true;
+        target.x = 0.5 + Math.sin(t * 0.45) * 0.34;
+        target.y = 0.48 + Math.cos(t * 0.35) * 0.12;
       }
+
+      target.active = true;
 
 
       const ease =
         reducedMotion
           ? 1
-          : isTouch
-            ? 0.06
-            : 0.085;
+          : target.manual
+            ? 0.085
+            : 0.045;
 
 
       current.x +=
@@ -139,11 +143,7 @@ export default function HeroSection({ onOpenBooking }) {
 
 
       const targetOpacity =
-        target.active
-          ? isTouch
-            ? 0.75
-            : 1
-          : 0;
+        reducedMotion ? 0.55 : 0.85;
 
 
       current.opacity +=
@@ -304,8 +304,13 @@ export default function HeroSection({ onOpenBooking }) {
     color:
       'transparent',
 
+    /*
+     * Use em-based stroke so outline thickness scales with
+     * font size. Fixed 1px strokes alias / look pixelated
+     * when the letters are huge and the page is zoomed out.
+     */
     WebkitTextStroke:
-      '1px rgba(212, 175, 55, 0.035)',
+      '0.018em rgba(212, 175, 55, 0.04)',
 
     opacity: 1,
 
@@ -346,26 +351,20 @@ export default function HeroSection({ onOpenBooking }) {
               glowOpacity,
 
 
-            /*
-             * SMALL cursor vicinity.
-
-             * The old mask was too large and made
-             * the entire word visible.
-             */
             WebkitMaskImage: `
               radial-gradient(
-                ellipse 12% 16%
+                ellipse 18% 22%
                 at ${mouseX}% ${mouseY}%,
 
                 black 0%,
 
                 rgba(0,0,0,0.95) 18%,
 
-                rgba(0,0,0,0.62) 35%,
+                rgba(0,0,0,0.65) 38%,
 
-                rgba(0,0,0,0.25) 55%,
+                rgba(0,0,0,0.28) 58%,
 
-                rgba(0,0,0,0.06) 75%,
+                rgba(0,0,0,0.06) 78%,
 
                 transparent 100%
               )
@@ -374,18 +373,18 @@ export default function HeroSection({ onOpenBooking }) {
 
             maskImage: `
               radial-gradient(
-                ellipse 12% 16%
+                ellipse 18% 22%
                 at ${mouseX}% ${mouseY}%,
 
                 black 0%,
 
                 rgba(0,0,0,0.95) 18%,
 
-                rgba(0,0,0,0.62) 35%,
+                rgba(0,0,0,0.65) 38%,
 
-                rgba(0,0,0,0.25) 55%,
+                rgba(0,0,0,0.28) 58%,
 
-                rgba(0,0,0,0.06) 75%,
+                rgba(0,0,0,0.06) 78%,
 
                 transparent 100%
               )
@@ -447,13 +446,13 @@ export default function HeroSection({ onOpenBooking }) {
       'transparent',
 
     WebkitTextStroke:
-      '0.9px rgba(255, 202, 28, 0.95)',
+      '0.022em rgba(255, 202, 28, 1)',
 
     textShadow:
       'none',
 
     filter:
-      'drop-shadow(0 0 4px rgba(255, 202, 28, 0.72)) drop-shadow(0 0 10px rgba(255, 202, 28, 0.28))',
+      'drop-shadow(0 0 6px rgba(255, 202, 28, 0.75)) drop-shadow(0 0 14px rgba(255, 202, 28, 0.35))',
   }}
 >
   REPAIR

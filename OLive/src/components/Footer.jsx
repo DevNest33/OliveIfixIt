@@ -2,7 +2,7 @@ import React from 'react';
 import { Mail, Clock } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 
-export default function Footer({ onOpenBooking, onOpenTrack }) {
+export default function Footer({ onOpenBooking }) {
   return (
     <footer className="bg-black text-white pt-16 pb-12 border-t border-gray-900 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,13 +24,6 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
                 className="gold-gradient-btn px-4 py-2 rounded-xl text-xs font-bold shadow-md cursor-pointer"
               >
                 Book Online
-              </button>
-
-              <button
-                onClick={onOpenTrack}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-              >
-                Track Repair
               </button>
             </div>
           </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Calendar, Menu, X } from 'lucide-react';
+import { Calendar, Menu, X } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 
-export default function Navbar({ onOpenBooking, onOpenTrack }) {
+export default function Navbar({ onOpenBooking }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -62,14 +62,6 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
 
           <div className="hidden md:flex items-center gap-3">
             <button
-              onClick={onOpenTrack}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-brand-gold bg-brand-gold/5 hover:bg-brand-gold/10 border border-brand-gold/15 transition-all"
-            >
-              <Search className="w-3.5 h-3.5 text-brand-gold" />
-              Track Status
-            </button>
-
-            <button
               onClick={() => onOpenBooking()}
               className="gold-gradient-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 cursor-pointer"
             >
@@ -80,11 +72,11 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
 
           <div className="flex md:hidden items-center gap-2">
             <button
-              onClick={onOpenTrack}
-              aria-label="Track repair"
-              className="w-11 h-11 rounded-lg bg-gray-900 text-gray-300 flex items-center justify-center touch-manipulation"
+              onClick={() => onOpenBooking()}
+              aria-label="Book repair"
+              className="w-11 h-11 rounded-lg gold-gradient-btn flex items-center justify-center touch-manipulation"
             >
-              <Search className="w-5 h-5 text-brand-gold" />
+              <Calendar className="w-5 h-5" />
             </button>
 
             <button
@@ -116,17 +108,6 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
           </nav>
 
           <div className="pt-2 flex flex-col gap-2.5">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenTrack();
-              }}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm bg-gray-900 text-gray-300 touch-manipulation"
-            >
-              <Search className="w-4 h-4 text-brand-gold" />
-              Track Repair Ticket
-            </button>
-
             <button
               onClick={() => {
                 setMobileMenuOpen(false);

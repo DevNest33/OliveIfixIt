@@ -9,12 +9,10 @@ import ReviewsSection from './components/ReviewsSection';
 import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 import BookingModal from './components/BookingModal';
-import TrackRepairModal from './components/TrackRepairModal';
 import WhatsAppChatWidget from './components/WhatsAppChatWidget';
 
 export default function App() {
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [trackOpen, setTrackOpen] = useState(false);
   const [selectedBookingData, setSelectedBookingData] = useState(null);
 
   const handleOpenBooking = (initialData = null) => {
@@ -26,7 +24,6 @@ export default function App() {
     <div className="min-h-screen bg-black text-white selection:bg-brand-gold selection:text-black flex flex-col font-sans">
       <Navbar 
         onOpenBooking={() => handleOpenBooking()} 
-        onOpenTrack={() => setTrackOpen(true)} 
       />
 
       <main className="flex-grow">
@@ -56,7 +53,6 @@ export default function App() {
 
       <Footer 
         onOpenBooking={() => handleOpenBooking()} 
-        onOpenTrack={() => setTrackOpen(true)} 
       />
 
       <BookingModal 
@@ -65,12 +61,7 @@ export default function App() {
         initialSelection={selectedBookingData} 
       />
 
-      <TrackRepairModal 
-        isOpen={trackOpen} 
-        onClose={() => setTrackOpen(false)} 
-      />
-
-      <WhatsAppChatWidget hidden={bookingOpen || trackOpen} />
+      <WhatsAppChatWidget hidden={bookingOpen} />
     </div>
   );
 }

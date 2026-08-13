@@ -26,7 +26,6 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
   const [notes, setNotes] = useState('');
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [ticketId, setTicketId] = useState('');
 
   const resetForm = useCallback(() => {
     setStep(1);
@@ -112,8 +111,6 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
 
     window.open(getWhatsAppUrl(message), '_blank');
 
-    const newId = `FIX-${Math.floor(1000 + Math.random() * 9000)}`;
-    setTicketId(newId);
     setIsSubmitted(true);
 
     confetti({
@@ -196,18 +193,13 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-xl sm:text-2xl font-extrabold text-white">Repair Ticket Booked!</h4>
+                <h4 className="text-xl sm:text-2xl font-extrabold text-white">Booking Sent!</h4>
                 <p className="text-sm text-gray-400 max-w-md mx-auto px-2">
-                  Your booking details have been sent via WhatsApp. We&apos;ll confirm shortly.
+                  Your booking details have been sent via WhatsApp. We&apos;ll confirm and share all updates with you there.
                 </p>
               </div>
 
               <div className="bg-black border border-gray-800 rounded-2xl p-4 sm:p-5 max-w-md mx-auto text-left space-y-3">
-                <div className="flex items-center justify-between border-b border-gray-800 pb-2 gap-2">
-                  <span className="text-xs font-semibold text-gray-500">Ticket Reference ID</span>
-                  <span className="text-sm sm:text-base font-mono font-extrabold text-brand-gold">{ticketId}</span>
-                </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
                     <span className="text-gray-500 block">Device</span>

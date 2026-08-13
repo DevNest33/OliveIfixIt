@@ -50,15 +50,18 @@ export default function ReviewsSection() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    {[...Array(rev.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      {[...Array(rev.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-500">{rev.date}</span>
                   </div>
 
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-500/20">
                     <CheckCircle className="w-3.5 h-3.5" />
-                    Verified Customer
+                    Google Review
                   </span>
                 </div>
 
