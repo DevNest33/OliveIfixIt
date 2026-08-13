@@ -5,6 +5,25 @@
 @layer base {
     html {
         font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+}
+
+@layer utilities {
+    .pt-safe {
+        padding-top: max(0px, env(safe-area-inset-top));
+    }
+
+    .pb-safe {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .touch-manipulation {
+        touch-action: manipulation;
     }
 }
 

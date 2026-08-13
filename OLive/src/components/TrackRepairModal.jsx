@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { SAMPLE_TRACKING_ORDERS } from '../data/repairData';
-import { X, Search, Wrench, CheckCircle2, Clock, ShieldCheck, UserCheck, AlertCircle } from 'lucide-react';
+import { X, Search, Wrench, CheckCircle2, ShieldCheck, UserCheck, AlertCircle } from 'lucide-react';
+import useModalLock from '../hooks/useModalLock';
 
 export default function TrackRepairModal({ isOpen, onClose }) {
   const [ticketInput, setTicketInput] = useState('');
   const [activeOrder, setActiveOrder] = useState(SAMPLE_TRACKING_ORDERS['FIX-9821']);
   const [notFound, setNotFound] = useState(false);
+
+  useModalLock(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -40,43 +43,53 @@ export default function TrackRepairModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-gray-900 rounded-3xl max-w-xl w-full shadow-2xl border border-gray-800 overflow-hidden relative animate-in fade-in zoom-in duration-200 my-8">
-
-        <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Search className="w-5 h-5 text-brand-gold" />
-            <h3 className="text-base font-bold">Track Live Repair Status</h3>
+    <div
+      className="fixed inset-0 z-50 flex flex-col sm:items-center sm:justify-center sm:p-4 bg-black/85 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Track repair status"
+      onClick={onClose}
+    >
+      <div
+        className="bg-gray-900 sm:rounded-3xl max-w-xl w-full h-[100dvh] sm:h-auto sm:max-h-[92dvh] shadow-2xl border-0 sm:border border-gray-800 overflow-hidden relative flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="bg-black text-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shrink-0 border-b border-gray-800 pt-safe">
+          <div className="flex items-center gap-2 min-w-0">
+            <Search className="w-5 h-5 text-brand-gold shrink-0" />
+            <h3 className="text-sm sm:text-base font-bold truncate">Track Live Repair Status</h3>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+            aria-label="Close tracking"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center transition-colors shrink-0 touch-manipulation"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-6 pb-safe">
 
           <form onSubmit={handleSearch} className="space-y-2">
             <label className="block text-xs font-bold text-gray-400">Enter Repair Ticket Number</label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 placeholder="e.g. FIX-9821 or FIX-8840"
                 value={ticketInput}
                 onChange={(e) => setTicketInput(e.target.value)}
-                className="flex-1 px-4 py-2.5 bg-black border border-gray-700 rounded-xl text-sm font-semibold uppercase text-white focus:ring-2 focus:ring-brand-gold"
+                className="flex-1 px-4 py-3 bg-black border border-gray-700 rounded-xl text-sm font-semibold uppercase text-white focus:ring-2 focus:ring-brand-gold"
               />
               <button
                 type="submit"
-                className="bg-brand-gold text-black px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-gold-light transition-colors"
+                className="bg-brand-gold text-black px-5 py-3 rounded-xl font-bold text-sm hover:bg-brand-gold-light transition-colors touch-manipulation shrink-0"
               >
                 Track Ticket
               </button>
             </div>
 
-            <div className="flex items-center gap-2 pt-1 text-[11px] text-gray-500">
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-gray-500">
               <span>Try sample tickets:</span>
               <button
                 type="button"
@@ -85,7 +98,7 @@ export default function TrackRepairModal({ isOpen, onClose }) {
                   setActiveOrder(SAMPLE_TRACKING_ORDERS['FIX-9821']);
                   setNotFound(false);
                 }}
-                className="text-brand-gold font-bold hover:underline"
+                className="text-brand-gold font-bold hover:underline touch-manipulation py-1"
               >
                 FIX-9821
               </button>
@@ -97,7 +110,7 @@ export default function TrackRepairModal({ isOpen, onClose }) {
                   setActiveOrder(SAMPLE_TRACKING_ORDERS['FIX-8840']);
                   setNotFound(false);
                 }}
-                className="text-brand-gold font-bold hover:underline"
+                className="text-brand-gold font-bold hover:underline touch-manipulation py-1"
               >
                 FIX-8840
               </button>
@@ -110,15 +123,15 @@ export default function TrackRepairModal({ isOpen, onClose }) {
               Ticket ID not found. Please try FIX-9821 or create a new booking above.
             </div>
           ) : activeOrder && (
-            <div className="bg-black rounded-2xl p-5 border border-gray-800 space-y-5">
+            <div className="bg-black rounded-2xl p-4 sm:p-5 border border-gray-800 space-y-5">
 
-              <div className="flex items-center justify-between pb-3 border-b border-gray-800">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-gray-800">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-gray-500">Order #{activeOrder.id}</span>
                   <h4 className="text-base font-extrabold text-white">{activeOrder.device}</h4>
                   <p className="text-xs text-brand-gold font-semibold">{activeOrder.issue}</p>
                 </div>
-                <div className="text-right">
+                <div className="sm:text-right">
                   <span className="inline-block text-xs font-extrabold bg-brand-gold text-black px-3 py-1 rounded-full">
                     {activeOrder.status}
                   </span>
@@ -154,9 +167,9 @@ export default function TrackRepairModal({ isOpen, onClose }) {
                 ))}
               </div>
 
-              <div className="pt-3 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400">
+              <div className="pt-3 border-t border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 font-semibold">
-                  <UserCheck className="w-4 h-4 text-brand-gold" />
+                  <UserCheck className="w-4 h-4 text-brand-gold shrink-0" />
                   Assigned Tech: <strong className="text-white">{activeOrder.tech}</strong>
                 </span>
                 <span className="text-emerald-400 font-bold flex items-center gap-1">

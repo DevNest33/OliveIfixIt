@@ -226,12 +226,15 @@ export default function HeroSection({ onOpenBooking }) {
       ref={sectionRef}
       className="
         relative
-        min-h-[720px]
+        min-h-[85dvh]
+        sm:min-h-[720px]
         lg:min-h-[780px]
         bg-black
         overflow-hidden
         flex
         items-center
+        pt-20
+        sm:pt-0
       "
     >
 
@@ -275,7 +278,7 @@ export default function HeroSection({ onOpenBooking }) {
     fontFamily: 'Arial Black, Arial, sans-serif',
 
     fontSize:
-      'clamp(150px, 22vw, 420px)',
+      'clamp(80px, 22vw, 420px)',
 
     letterSpacing:
       '0em',
@@ -417,7 +420,7 @@ export default function HeroSection({ onOpenBooking }) {
     fontFamily: 'Arial Black, Arial, sans-serif',
 
     fontSize:
-      'clamp(150px, 22vw, 420px)',
+      'clamp(80px, 22vw, 420px)',
 
     letterSpacing:
       '0em',
@@ -559,7 +562,7 @@ export default function HeroSection({ onOpenBooking }) {
                 delay: 0.1,
               }}
               className="
-                text-5xl
+                text-4xl
                 sm:text-6xl
                 lg:text-7xl
                 font-extrabold
@@ -677,6 +680,8 @@ export default function HeroSection({ onOpenBooking }) {
                 }
                 className="
                   gold-gradient-btn
+                  w-full
+                  sm:w-auto
                   px-8
                   py-4
                   rounded-xl
@@ -689,6 +694,7 @@ export default function HeroSection({ onOpenBooking }) {
                   group
                   shadow-gold-glow
                   cursor-pointer
+                  touch-manipulation
                 "
               >
 

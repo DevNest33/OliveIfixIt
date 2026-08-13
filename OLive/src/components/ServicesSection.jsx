@@ -102,7 +102,7 @@ export default function ServicesSection({ onSelectService }) {
           })}
         </div>
 
-        <div className="mt-14 glass-panel p-8 rounded-3xl border border-brand-gold/15 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg bg-gradient-to-r from-brand-gold/5 via-black to-brand-gold/5">
+        <div className="mt-14 glass-panel p-5 sm:p-8 rounded-3xl border border-brand-gold/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-lg bg-gradient-to-r from-brand-gold/5 via-black to-brand-gold/5">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-brand-gold text-black flex items-center justify-center shrink-0 shadow-md">
               <ShieldCheck className="w-7 h-7" />
@@ -115,7 +115,7 @@ export default function ServicesSection({ onSelectService }) {
 
           <button
             onClick={() => onSelectService(null)}
-            className="gold-gradient-btn px-6 py-3 rounded-xl font-bold text-sm shrink-0 flex items-center gap-2 shadow-md cursor-pointer"
+            className="w-full md:w-auto gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm shrink-0 flex items-center justify-center gap-2 shadow-md cursor-pointer touch-manipulation"
           >
             Book Now
           </button>

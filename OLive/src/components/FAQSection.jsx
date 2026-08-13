@@ -75,7 +75,7 @@ export default function FAQSection() {
                 >
                   <button
                     onClick={() => setOpenId(isOpen ? null : faq.id)}
-                    className="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-white hover:text-brand-gold transition-colors cursor-pointer"
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-white active:text-brand-gold transition-colors cursor-pointer touch-manipulation min-h-[56px]"
                   >
                     <span className="text-base sm:text-lg">{faq.question}</span>
                     <div className={`w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 bg-brand-gold text-black' : 'text-gray-400'}`}>

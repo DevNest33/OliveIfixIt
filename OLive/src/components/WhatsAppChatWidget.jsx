@@ -17,7 +17,7 @@ function WhatsAppIcon({ className }) {
   );
 }
 
-export default function WhatsAppChatWidget() {
+export default function WhatsAppChatWidget({ hidden = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const whatsAppUrl = getWhatsAppUrl();
@@ -44,10 +44,12 @@ export default function WhatsAppChatWidget() {
     };
   }, [isOpen]);
 
+  if (hidden) return null;
+
   return (
     <div
       ref={containerRef}
-      className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-3"
+      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3"
     >
       <AnimatePresence>
         {isOpen && (
@@ -106,7 +108,7 @@ export default function WhatsAppChatWidget() {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
         aria-expanded={isOpen}
-        className="relative w-14 h-14 rounded-full gold-gradient-btn flex items-center justify-center shadow-gold-glow cursor-pointer"
+        className="relative w-14 h-14 rounded-full gold-gradient-btn flex items-center justify-center shadow-gold-glow cursor-pointer touch-manipulation"
       >
         {!isOpen && (
           <span className="absolute inset-0 rounded-full bg-brand-gold/30 animate-ping pointer-events-none" />

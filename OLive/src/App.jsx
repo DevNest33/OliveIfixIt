@@ -70,7 +70,7 @@ export default function App() {
         onClose={() => setTrackOpen(false)} 
       />
 
-      <WhatsAppChatWidget />
+      <WhatsAppChatWidget hidden={bookingOpen || trackOpen} />
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import {
   X, CheckCircle2, ArrowRight, Truck, Store, User, Mail, Phone
 } from 'lucide-react';
 import { DEVICE_CATEGORIES, REPAIR_ISSUES } from '../data/repairData';
 import { buildBookingWhatsAppMessage, getWhatsAppUrl } from '../data/contactConfig';
+import useModalLock from '../hooks/useModalLock';
 import logoImg from '../assets/logo.png';
 
 const POPULAR_ISSUES = REPAIR_ISSUES.filter((i) => i.popular);
@@ -26,6 +27,14 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [ticketId, setTicketId] = useState('');
+
+  const resetForm = useCallback(() => {
+    setStep(1);
+    setIsSubmitted(false);
+    onClose();
+  }, [onClose]);
+
+  useModalLock(isOpen, resetForm);
 
   useEffect(() => {
     if (initialSelection) {
@@ -51,12 +60,17 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
     ? customIssueText.trim()
     : (currentIssue?.title || '');
 
+  const totalSteps = serviceMode === 'delivery' ? 4 : 3;
   const confirmStep = serviceMode === 'delivery' ? 4 : 3;
   const isConfirmStep = step === confirmStep;
 
   const serviceLabel = serviceMode === 'delivery'
     ? 'Doorstep Pickup & Delivery'
     : 'Walk-in Repair';
+
+  const progressSteps = serviceMode === 'delivery'
+    ? ['Device & Issue', 'Service Mode', 'Pickup Address', 'Confirm']
+    : ['Device & Issue', 'Service Mode', 'Confirm'];
 
   const validateStep1 = () => {
     if (!modelInput.trim()) return false;
@@ -109,69 +123,92 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
     });
   };
 
-  const resetForm = () => {
-    setStep(1);
-    setIsSubmitted(false);
-    onClose();
-  };
-
-  const progressSteps = serviceMode === 'delivery'
-    ? ['1. Device & Issue', '2. Service Mode', '3. Pickup Address', '4. Confirm']
-    : ['1. Device & Issue', '2. Service Mode', '3. Confirm'];
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-gray-900 rounded-3xl max-w-2xl w-full shadow-2xl border border-gray-800 overflow-hidden relative animate-in fade-in zoom-in duration-200 my-8">
-
-        <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+    <div
+      className="fixed inset-0 z-50 flex flex-col sm:items-center sm:justify-center sm:p-4 bg-black/85 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Book repair appointment"
+      onClick={resetForm}
+    >
+      <div
+        className="bg-gray-900 sm:rounded-3xl max-w-2xl w-full h-[100dvh] sm:h-auto sm:max-h-[92dvh] shadow-2xl border-0 sm:border border-gray-800 overflow-hidden relative flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Sticky header — always visible, easy to tap close */}
+        <div className="bg-black text-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shrink-0 border-b border-gray-800 pt-safe">
+          <div className="flex items-center gap-2 min-w-0 pr-2">
             <img src={logoImg} alt="Olive ifixit logo" className="w-8 h-8 rounded-lg object-contain shrink-0" />
-            <div>
-              <h3 className="text-base font-bold">Book Repair Appointment</h3>
-              <p className="text-[11px] text-gray-400">Quick booking via WhatsApp & 3-Month Warranty</p>
+            <div className="min-w-0">
+              <h3 className="text-sm sm:text-base font-bold truncate">Book Repair Appointment</h3>
+              <p className="text-[10px] sm:text-[11px] text-gray-400 truncate">Quick booking via WhatsApp</p>
             </div>
           </div>
 
           <button
+            type="button"
             onClick={resetForm}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+            aria-label="Close booking"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center transition-colors shrink-0 touch-manipulation"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
         {!isSubmitted && (
-          <div className="bg-gray-800 px-6 py-3 border-b border-gray-700 flex items-center justify-between text-xs font-bold text-gray-400">
-            {progressSteps.map((label, idx) => (
-              <React.Fragment key={label}>
-                {idx > 0 && <span>&rarr;</span>}
-                <span className={step >= idx + 1 ? 'text-brand-gold' : ''}>{label}</span>
-              </React.Fragment>
-            ))}
+          <div className="bg-gray-800 px-4 sm:px-6 py-2.5 border-b border-gray-700 shrink-0">
+            {/* Mobile: compact step indicator */}
+            <div className="sm:hidden flex items-center justify-between text-xs font-bold">
+              <span className="text-brand-gold">Step {step} of {totalSteps}</span>
+              <span className="text-gray-400 truncate ml-2">{progressSteps[step - 1]}</span>
+            </div>
+            {/* Desktop: full progress bar */}
+            <div className="hidden sm:flex items-center justify-between text-xs font-bold text-gray-400">
+              {progressSteps.map((label, idx) => (
+                <React.Fragment key={label}>
+                  {idx > 0 && <span className="text-gray-600">&rarr;</span>}
+                  <span className={step >= idx + 1 ? 'text-brand-gold' : ''}>
+                    {idx + 1}. {label}
+                  </span>
+                </React.Fragment>
+              ))}
+            </div>
+            {/* Mobile: progress dots */}
+            <div className="sm:hidden flex items-center gap-1.5 mt-2">
+              {progressSteps.map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`h-1 flex-1 rounded-full transition-colors ${
+                    step >= idx + 1 ? 'bg-brand-gold' : 'bg-gray-700'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         )}
 
-        <div className="p-6 sm:p-8">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-8 pb-safe">
           {isSubmitted ? (
-            <div className="text-center py-6 space-y-6">
+            <div className="text-center py-4 sm:py-6 space-y-6">
               <div className="w-20 h-20 rounded-full bg-emerald-900 text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
                 <CheckCircle2 className="w-12 h-12" />
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-2xl font-extrabold text-white">Repair Ticket Booked!</h4>
-                <p className="text-sm text-gray-400 max-w-md mx-auto">
+                <h4 className="text-xl sm:text-2xl font-extrabold text-white">Repair Ticket Booked!</h4>
+                <p className="text-sm text-gray-400 max-w-md mx-auto px-2">
                   Your booking details have been sent via WhatsApp. We&apos;ll confirm shortly.
                 </p>
               </div>
 
-              <div className="bg-black border border-gray-800 rounded-2xl p-5 max-w-md mx-auto text-left space-y-3">
-                <div className="flex items-center justify-between border-b border-gray-800 pb-2">
+              <div className="bg-black border border-gray-800 rounded-2xl p-4 sm:p-5 max-w-md mx-auto text-left space-y-3">
+                <div className="flex items-center justify-between border-b border-gray-800 pb-2 gap-2">
                   <span className="text-xs font-semibold text-gray-500">Ticket Reference ID</span>
-                  <span className="text-base font-mono font-extrabold text-brand-gold">{ticketId}</span>
+                  <span className="text-sm sm:text-base font-mono font-extrabold text-brand-gold">{ticketId}</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
                     <span className="text-gray-500 block">Device</span>
                     <strong className="text-white">{categoryName} — {modelInput}</strong>
@@ -185,7 +222,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                     <strong className="text-white">{serviceLabel}</strong>
                   </div>
                   {serviceMode === 'delivery' && (
-                    <div className="col-span-2">
+                    <div className="sm:col-span-2">
                       <span className="text-gray-500 block">Address</span>
                       <strong className="text-white">{deliveryAddress}</strong>
                     </div>
@@ -193,21 +230,20 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-                <button
-                  onClick={resetForm}
-                  className="w-full sm:w-auto gold-gradient-btn px-8 py-3 rounded-xl font-bold text-sm"
-                >
-                  Done
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="w-full sm:w-auto gold-gradient-btn px-8 py-3.5 rounded-xl font-bold text-sm touch-manipulation"
+              >
+                Done
+              </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmitBooking}>
+            <form onSubmit={handleSubmitBooking} className="pb-2">
 
               {step === 1 && (
                 <div className="space-y-5">
-                  <h4 className="text-lg font-bold text-white">Step 1: What device needs repair?</h4>
+                  <h4 className="text-base sm:text-lg font-bold text-white">What device needs repair?</h4>
 
                   <div>
                     <label className="block text-xs font-bold text-gray-400 mb-1.5">Category</label>
@@ -217,8 +253,8 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                           key={cat.id}
                           type="button"
                           onClick={() => setCategory(cat.id)}
-                          className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                            category === cat.id ? 'bg-brand-gold text-black border-brand-gold' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border-gray-700'
+                          className={`p-3 rounded-xl border text-xs font-bold transition-all touch-manipulation min-h-[44px] ${
+                            category === cat.id ? 'bg-brand-gold text-black border-brand-gold' : 'bg-gray-800 text-gray-300 active:bg-gray-700 border-gray-700'
                           }`}
                         >
                           {cat.name}
@@ -232,38 +268,38 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. iPhone 14 Pro, Galaxy S23, MacBook Air M2"
+                      placeholder="e.g. iPhone 14 Pro, Galaxy S23"
                       value={modelInput}
                       onChange={(e) => setModelInput(e.target.value)}
-                      className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl text-xs font-bold text-gray-200 focus:ring-2 focus:ring-brand-gold"
+                      className="w-full p-3.5 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-gray-200 focus:ring-2 focus:ring-brand-gold"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-gray-400 mb-1.5">Select Issue</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 gap-2">
                       {POPULAR_ISSUES.map((iss) => (
                         <button
                           key={iss.id}
                           type="button"
                           onClick={() => setIssueId(iss.id)}
-                          className={`p-3 rounded-xl border text-left text-xs font-semibold flex items-center justify-between transition-all ${
-                            issueId === iss.id ? 'bg-brand-gold/15 border-brand-gold text-white font-bold' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border-gray-700'
+                          className={`p-3.5 rounded-xl border text-left text-sm font-semibold flex items-center justify-between transition-all touch-manipulation min-h-[48px] ${
+                            issueId === iss.id ? 'bg-brand-gold/15 border-brand-gold text-white font-bold' : 'bg-gray-800 text-gray-300 active:bg-gray-700 border-gray-700'
                           }`}
                         >
                           <span>{iss.title}</span>
-                          <span className="text-gray-500 font-medium text-[11px]">{iss.timeEst}</span>
+                          <span className="text-gray-500 font-medium text-[11px] shrink-0 ml-2">{iss.timeEst}</span>
                         </button>
                       ))}
                       <button
                         type="button"
                         onClick={() => setIssueId('other')}
-                        className={`p-3 rounded-xl border text-left text-xs font-semibold flex items-center justify-between transition-all ${
-                          issueId === 'other' ? 'bg-brand-gold/15 border-brand-gold text-white font-bold' : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border-gray-700'
+                        className={`p-3.5 rounded-xl border text-left text-sm font-semibold flex items-center justify-between transition-all touch-manipulation min-h-[48px] ${
+                          issueId === 'other' ? 'bg-brand-gold/15 border-brand-gold text-white font-bold' : 'bg-gray-800 text-gray-300 active:bg-gray-700 border-gray-700'
                         }`}
                       >
                         <span>{OTHER_ISSUE.title}</span>
-                        <span className="text-gray-500 font-medium text-[11px]">{OTHER_ISSUE.timeEst}</span>
+                        <span className="text-gray-500 font-medium text-[11px] shrink-0 ml-2">{OTHER_ISSUE.timeEst}</span>
                       </button>
                     </div>
                   </div>
@@ -274,10 +310,10 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                       <textarea
                         rows={3}
                         required
-                        placeholder="e.g. Speaker crackles during calls, device overheats while charging, fingerprint sensor stopped working..."
+                        placeholder="e.g. Speaker crackles during calls, device overheats while charging..."
                         value={customIssueText}
                         onChange={(e) => setCustomIssueText(e.target.value)}
-                        className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl text-xs text-white focus:ring-2 focus:ring-brand-gold"
+                        className="w-full p-3.5 bg-gray-800 border border-gray-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold"
                       />
                       <p className="text-[11px] text-gray-500 mt-1.5">
                         Tell us what&apos;s wrong so our technician can prepare the right parts and tools.
@@ -285,31 +321,31 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                     </div>
                   )}
 
-                  <div className="pt-4 flex items-center gap-4">
-                    <div className="w-3/4 bg-black border border-gray-800 rounded-xl p-3 text-xs text-gray-400 font-medium">
-                      <p>Our repairs use carefully tested, original and compatible parts. When genuine original parts are available through our suppliers, we&apos;ll notify you before the repair.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleNextFromStep1}
-                      disabled={!validateStep1()}
-                      className="gold-gradient-btn px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Next: Service Mode <ArrowRight className="w-4 h-4" />
-                    </button>
+                  <div className="bg-black border border-gray-800 rounded-xl p-3 text-xs text-gray-400 font-medium">
+                    <p>Our repairs use carefully tested, original and compatible parts. When genuine original parts are available through our suppliers, we&apos;ll notify you before the repair.</p>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={handleNextFromStep1}
+                    disabled={!validateStep1()}
+                    className="w-full gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                  >
+                    Next: Service Mode <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
               )}
 
               {step === 2 && (
                 <div className="space-y-5">
-                  <h4 className="text-lg font-bold text-white">Step 2: Choose how you want service</h4>
+                  <h4 className="text-base sm:text-lg font-bold text-white">Choose how you want service</h4>
 
                   <div className="space-y-3">
-                    <div
+                    <button
+                      type="button"
                       onClick={() => setServiceMode('walkin')}
-                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-start gap-4 ${
-                        serviceMode === 'walkin' ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-700 hover:bg-gray-800'
+                      className={`w-full p-4 rounded-2xl border-2 transition-all flex items-start gap-4 text-left touch-manipulation ${
+                        serviceMode === 'walkin' ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-700 active:bg-gray-800'
                       }`}
                     >
                       <div className="w-10 h-10 rounded-xl bg-brand-gold text-black flex items-center justify-center shrink-0">
@@ -319,12 +355,13 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                         <h5 className="font-bold text-sm text-white">Walk-in Repair</h5>
                         <p className="text-xs text-gray-400 mt-0.5">Visit our store and drop off your device.</p>
                       </div>
-                    </div>
+                    </button>
 
-                    <div
+                    <button
+                      type="button"
                       onClick={() => setServiceMode('delivery')}
-                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-start gap-4 ${
-                        serviceMode === 'delivery' ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-700 hover:bg-gray-800'
+                      className={`w-full p-4 rounded-2xl border-2 transition-all flex items-start gap-4 text-left touch-manipulation ${
+                        serviceMode === 'delivery' ? 'border-brand-gold bg-brand-gold/5' : 'border-gray-700 active:bg-gray-800'
                       }`}
                     >
                       <div className="w-10 h-10 rounded-xl bg-brand-gold text-black flex items-center justify-center shrink-0">
@@ -335,14 +372,14 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                         <p className="text-xs text-gray-400 mt-0.5">We pick up and return your device to your address.</p>
                         <p className="text-xs text-brand-gold mt-1 font-semibold">Free within 5 km of store vicinity.</p>
                       </div>
-                    </div>
+                    </button>
                   </div>
 
-                  <div className="pt-4 flex justify-between">
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 pt-2">
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="px-5 py-2.5 rounded-xl font-bold text-xs bg-gray-800 text-gray-300"
+                      className="w-full sm:w-auto px-5 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 touch-manipulation"
                     >
                       Back
                     </button>
@@ -350,7 +387,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                     <button
                       type="button"
                       onClick={handleNextFromStep2}
-                      className="gold-gradient-btn px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2"
+                      className="w-full sm:w-auto gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 touch-manipulation"
                     >
                       {serviceMode === 'delivery' ? 'Next: Pickup Address' : 'Next: Confirm'} <ArrowRight className="w-4 h-4" />
                     </button>
@@ -360,28 +397,28 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
 
               {step === 3 && serviceMode === 'delivery' && (
                 <div className="space-y-5">
-                  <h4 className="text-lg font-bold text-white">Step 3: Pickup Address</h4>
+                  <h4 className="text-base sm:text-lg font-bold text-white">Pickup Address</h4>
 
                   <div>
                     <label className="block text-xs font-bold text-gray-400 mb-1.5">Pickup & Delivery Address</label>
                     <textarea
-                      rows={3}
+                      rows={4}
                       required
                       placeholder="House/flat no., street, landmark, area, pin code"
                       value={deliveryAddress}
                       onChange={(e) => setDeliveryAddress(e.target.value)}
-                      className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl text-xs text-white focus:ring-2 focus:ring-brand-gold"
+                      className="w-full p-3.5 bg-gray-800 border border-gray-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold"
                     />
                     <p className="text-[11px] text-gray-500 mt-1.5">
                       We&apos;ll pick up and return your device to this address (free within 5 km).
                     </p>
                   </div>
 
-                  <div className="pt-4 flex justify-between">
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 pt-2">
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      className="px-5 py-2.5 rounded-xl font-bold text-xs bg-gray-800 text-gray-300"
+                      className="w-full sm:w-auto px-5 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 touch-manipulation"
                     >
                       Back
                     </button>
@@ -390,7 +427,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                       type="button"
                       onClick={handleNextFromAddress}
                       disabled={deliveryAddress.trim().length < 15}
-                      className="gold-gradient-btn px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                     >
                       Next: Confirm <ArrowRight className="w-4 h-4" />
                     </button>
@@ -400,9 +437,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
 
               {isConfirmStep && (
                 <div className="space-y-5">
-                  <h4 className="text-lg font-bold text-white">
-                    Step {confirmStep}: Contact Information
-                  </h4>
+                  <h4 className="text-base sm:text-lg font-bold text-white">Contact Information</h4>
 
                   <div className="space-y-3">
                     <div>
@@ -415,12 +450,12 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                           placeholder="e.g. Alex Johnson"
                           value={customerName}
                           onChange={(e) => setCustomerName(e.target.value)}
-                          className="w-full pl-9 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-xs font-semibold text-white focus:ring-2 focus:ring-brand-gold"
+                          className="w-full pl-9 pr-3 py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold"
                         />
                       </div>
                     </div>
 
-                    <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-bold text-gray-400 mb-1">Email Address</label>
                         <div className="relative">
@@ -431,7 +466,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                             placeholder="alex@example.com"
                             value={customerEmail}
                             onChange={(e) => setCustomerEmail(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-xs font-semibold text-white focus:ring-2 focus:ring-brand-gold"
+                            className="w-full pl-9 pr-3 py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold"
                           />
                         </div>
                       </div>
@@ -443,10 +478,10 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                           <input
                             type="tel"
                             required
-                            placeholder="(555) 019-2834"
+                            placeholder="+91 80193 49487"
                             value={customerPhone}
                             onChange={(e) => setCustomerPhone(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-xs font-semibold text-white focus:ring-2 focus:ring-brand-gold"
+                            className="w-full pl-9 pr-3 py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold"
                           />
                         </div>
                       </div>
@@ -459,40 +494,44 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                         placeholder="e.g. Back glass also slightly scratched..."
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full p-2.5 bg-gray-800 border border-gray-700 rounded-xl text-xs text-white focus:ring-2 focus:ring-brand-gold"
+                        className="w-full p-3 bg-gray-800 border border-gray-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold"
                       />
                     </div>
                   </div>
 
-                  <div className="bg-black border border-gray-800 rounded-xl p-4 text-xs space-y-1.5">
-                    <div className="flex justify-between text-gray-400">
-                      <span>Device: <strong className="text-white">{categoryName} — {modelInput}</strong></span>
+                  <div className="bg-black border border-gray-800 rounded-xl p-4 text-xs space-y-2">
+                    <div className="text-gray-400">
+                      <span className="text-gray-500">Device: </span>
+                      <strong className="text-white">{categoryName} — {modelInput}</strong>
                     </div>
-                    <div className="flex justify-between text-gray-400">
-                      <span>Issue: <strong className="text-brand-gold">{issueLabel}</strong></span>
+                    <div className="text-gray-400">
+                      <span className="text-gray-500">Issue: </span>
+                      <strong className="text-brand-gold">{issueLabel}</strong>
                     </div>
-                    <div className="flex justify-between text-gray-400">
-                      <span>Service: <strong className="text-white">{serviceLabel}</strong></span>
+                    <div className="text-gray-400">
+                      <span className="text-gray-500">Service: </span>
+                      <strong className="text-white">{serviceLabel}</strong>
                     </div>
                     {serviceMode === 'delivery' && (
                       <div className="text-gray-400">
-                        <span>Address: <strong className="text-white">{deliveryAddress}</strong></span>
+                        <span className="text-gray-500">Address: </span>
+                        <strong className="text-white">{deliveryAddress}</strong>
                       </div>
                     )}
                   </div>
 
-                  <div className="pt-2 flex justify-between">
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 pt-2">
                     <button
                       type="button"
                       onClick={handleBackFromConfirm}
-                      className="px-5 py-2.5 rounded-xl font-bold text-xs bg-gray-800 text-gray-300"
+                      className="w-full sm:w-auto px-5 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 touch-manipulation"
                     >
                       Back
                     </button>
 
                     <button
                       type="submit"
-                      className="gold-gradient-btn px-8 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2"
+                      className="w-full sm:w-auto gold-gradient-btn px-8 py-3.5 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 touch-manipulation"
                     >
                       Confirm Repair Booking
                     </button>
@@ -503,7 +542,6 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
             </form>
           )}
         </div>
-
       </div>
     </div>
   );

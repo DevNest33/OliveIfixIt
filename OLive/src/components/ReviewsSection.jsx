@@ -67,12 +67,12 @@ export default function ReviewsSection() {
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between">
+              <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <img
                     src={rev.avatar}
                     alt={rev.name}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-brand-gold"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-brand-gold shrink-0"
                   />
                   <div>
                     <h4 className="text-sm font-extrabold text-white">{rev.name}</h4>
@@ -80,8 +80,8 @@ export default function ReviewsSection() {
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span className="text-[11px] font-bold text-brand-gold bg-brand-gold/15 px-2.5 py-1 rounded-lg block">
+                <div className="sm:text-right">
+                  <span className="text-[11px] font-bold text-brand-gold bg-brand-gold/15 px-2.5 py-1 rounded-lg inline-block">
                     {rev.device}
                   </span>
                   <span className="text-[10px] text-gray-400 mt-1 block">{rev.service}</span>

@@ -67,7 +67,7 @@ export default function ProcessSection({ onOpenBooking }) {
         <div className="mt-14 text-center">
           <button
             onClick={() => onOpenBooking()}
-            className="gold-gradient-btn text-white px-8 py-4 rounded-xl font-bold text-base shadow-gold-glow inline-flex items-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto gold-gradient-btn text-white px-8 py-4 rounded-xl font-bold text-base shadow-gold-glow inline-flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
           >
             Start Step 1: Book Appointment
             <ArrowRight className="w-5 h-5" />

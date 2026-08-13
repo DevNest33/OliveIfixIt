@@ -62,7 +62,7 @@ export default function WhyChooseUsSection({ onOpenBooking }) {
         <div className="mt-14 text-center">
           <button
             onClick={() => onOpenBooking()}
-            className="inline-flex items-center gap-3 gold-gradient-btn px-8 py-4 rounded-xl font-bold text-base shadow-gold-glow cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 gold-gradient-btn px-8 py-4 rounded-xl font-bold text-base shadow-gold-glow cursor-pointer touch-manipulation"
           >
             Experience Premium Repair Service
             <ArrowRight className="w-5 h-5" />

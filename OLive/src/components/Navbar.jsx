@@ -18,6 +18,15 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks = [
     { name: 'Services', href: '#services' },
     { name: 'Why Olive ifixit', href: '#why-us' },
@@ -27,9 +36,9 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${isScrolled
+    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 pt-safe ${isScrolled
       ? 'bg-black/85 backdrop-blur-md border-b border-gray-800 shadow-sm py-3'
-      : 'bg-transparent py-5'
+      : 'bg-transparent py-4 sm:py-5'
       }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-8">
@@ -72,15 +81,17 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={onOpenTrack}
-              className="p-2 rounded-lg bg-gray-900 text-gray-300 text-xs font-bold"
+              aria-label="Track repair"
+              className="w-11 h-11 rounded-lg bg-gray-900 text-gray-300 flex items-center justify-center touch-manipulation"
             >
-              <Search className="w-4 h-4 text-brand-gold" />
+              <Search className="w-5 h-5 text-brand-gold" />
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-xl bg-gray-900 text-gray-300 hover:bg-gray-800 transition-colors"
+              className="w-11 h-11 rounded-xl bg-gray-900 text-gray-300 active:bg-gray-800 transition-colors flex items-center justify-center touch-manipulation"
               aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -90,14 +101,14 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-black border-b border-gray-800 px-4 pt-4 pb-6 space-y-4 shadow-xl">
-          <nav className="flex flex-col space-y-3">
+        <div className="md:hidden bg-black border-b border-gray-800 px-4 pt-4 pb-6 space-y-4 shadow-xl max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
+          <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-semibold text-gray-300 hover:text-brand-gold py-1.5 border-b border-gray-800"
+                className="text-base font-semibold text-gray-300 active:text-brand-gold py-3 border-b border-gray-800 touch-manipulation"
               >
                 {link.name}
               </a>
@@ -110,7 +121,7 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
                 setMobileMenuOpen(false);
                 onOpenTrack();
               }}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm bg-gray-900 text-gray-300"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm bg-gray-900 text-gray-300 touch-manipulation"
             >
               <Search className="w-4 h-4 text-brand-gold" />
               Track Repair Ticket
@@ -121,7 +132,7 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
                 setMobileMenuOpen(false);
                 onOpenBooking();
               }}
-              className="w-full gold-gradient-btn py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg"
+              className="w-full gold-gradient-btn py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg touch-manipulation"
             >
               <Calendar className="w-4 h-4" />
               Book Repair Now

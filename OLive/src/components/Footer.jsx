@@ -77,15 +77,15 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
 
         </div>
 
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 text-xs text-gray-500 text-center sm:text-left">
           <div className="flex items-center gap-2">
             <span>© {new Date().getFullYear()} Olive ifixit. All Rights Reserved.</span>
           </div>
 
-          <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-gray-300">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-300">Terms of Service</a>
-            <a href="#" className="hover:text-gray-300">Warranty Policy</a>
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+            <a href="#" className="hover:text-gray-300 py-1 touch-manipulation">Privacy Policy</a>
+            <a href="#" className="hover:text-gray-300 py-1 touch-manipulation">Terms of Service</a>
+            <a href="#" className="hover:text-gray-300 py-1 touch-manipulation">Warranty Policy</a>
           </div>
         </div>
 
