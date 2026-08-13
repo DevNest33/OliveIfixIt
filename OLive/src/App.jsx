@@ -10,6 +10,7 @@ import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 import BookingModal from './components/BookingModal';
 import TrackRepairModal from './components/TrackRepairModal';
+import WhatsAppChatWidget from './components/WhatsAppChatWidget';
 
 export default function App() {
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -68,6 +69,8 @@ export default function App() {
         isOpen={trackOpen} 
         onClose={() => setTrackOpen(false)} 
       />
+
+      <WhatsAppChatWidget />
     </div>
   );
 }
