@@ -111,11 +111,21 @@ export default function HeroSection({ onOpenBooking }) {
       const current =
         currentRef.current;
 
+      // Mobile: auto-sweep glow since hover/cursor tracking isn't available
+      if (isTouch && !reducedMotion) {
+        const t = Date.now() / 1000;
+        target.x = 0.5 + Math.sin(t * 0.5) * 0.3;
+        target.y = 0.5 + Math.cos(t * 0.4) * 0.15;
+        target.active = true;
+      }
+
 
       const ease =
         reducedMotion
           ? 1
-          : 0.085;
+          : isTouch
+            ? 0.06
+            : 0.085;
 
 
       current.x +=
@@ -129,7 +139,11 @@ export default function HeroSection({ onOpenBooking }) {
 
 
       const targetOpacity =
-        target.active ? 1 : 0;
+        target.active
+          ? isTouch
+            ? 0.75
+            : 1
+          : 0;
 
 
       current.opacity +=

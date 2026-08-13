@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import {
-  X, CheckCircle2, Calendar, Clock, MapPin, Smartphone, Wrench, ShieldCheck,
+  X, CheckCircle2, Calendar, Clock, MapPin, Smartphone, ShieldCheck,
   ArrowRight, ArrowLeft, Truck, Store, Sparkles, User, Mail, Phone, FileText
 } from 'lucide-react';
 import { DEVICE_CATEGORIES, DEVICE_BRANDS, DEVICE_MODELS, REPAIR_ISSUES, MODEL_PRICING_MAP } from '../data/repairData';
+import logoImg from '../assets/logo.png';
 
 
 export default function BookingModal({ isOpen, onClose, initialSelection }) {
@@ -76,9 +77,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
 
         <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-brand-gold text-black flex items-center justify-center font-bold">
-              <Wrench className="w-4 h-4" />
-            </div>
+            <img src={logoImg} alt="Olive ifixit logo" className="w-8 h-8 rounded-lg object-contain shrink-0" />
             <div>
               <h3 className="text-base font-bold">Book Repair Appointment</h3>
               <p className="text-[11px] text-gray-400">Instant scheduling & 3-Month Warranty</p>

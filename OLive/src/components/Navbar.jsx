@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Smartphone, Wrench, Search, Calendar, Menu, X, ShieldCheck } from 'lucide-react';
+import { Search, Calendar, Menu, X } from 'lucide-react';
+import BrandLogo from './BrandLogo';
 
 export default function Navbar({ onOpenBooking, onOpenTrack }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -19,7 +20,7 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
 
   const navLinks = [
     { name: 'Services', href: '#services' },
-    { name: 'Why FixCraft', href: '#why-us' },
+    { name: 'Why Olive ifixit', href: '#why-us' },
     { name: 'Repair Process', href: '#process' },
     { name: 'Reviews', href: '#reviews' },
     { name: 'FAQ', href: '#faq' },
@@ -33,17 +34,8 @@ export default function Navbar({ onOpenBooking, onOpenTrack }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-8">
 
-          <a href="#" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-brand-black flex items-center justify-center text-white shadow-md shadow-brand-gold/20 group-hover:bg-brand-black-lighter transition-colors">
-              <Wrench className="w-5 h-5 text-brand-gold group-hover:rotate-45 transition-transform duration-300" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
-                Olive<span className="text-brand-gold">Craft</span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider bg-brand-gold/10 text-brand-gold px-1.5 py-0.5 rounded ml-1">Pro</span>
-              </span>
-              <span className="text-[10px] text-gray-500 font-medium -mt-1">Express Mob Repairs</span>
-            </div>
+          <a href="#" className="group">
+            <BrandLogo showTagline />
           </a>
 
           <nav className="hidden lg:flex items-center space-x-7">

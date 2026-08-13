@@ -237,7 +237,7 @@ export const CUSTOMER_REVIEWS = [
     date: '2 days ago',
     device: 'iPhone 15 Pro Max',
     service: 'Screen Replacement',
-    review: 'Shattered my screen 45 minutes before an important client meeting. FixCraft repaired it in 22 minutes flat! Screen color and touch response are identical to brand new. Absolutely lifesaving team!',
+    review: 'Shattered my screen 45 minutes before an important client meeting. Olive ifixit repaired it in 22 minutes flat! Screen color and touch response are identical to brand new. Absolutely lifesaving team!',
     verified: true
   },
   {
@@ -249,7 +249,7 @@ export const CUSTOMER_REVIEWS = [
     date: '1 week ago',
     device: 'MacBook Air M2',
     service: 'Water Damage Recovery',
-    review: 'Spilled coffee over my MacBook keyboard. Local Apple store told me I needed a full board replacement for $1,200. FixCraft ultrasonic cleaned the board and replaced two caps for a fraction of the cost. 100% working!',
+    review: 'Spilled coffee over my MacBook keyboard. Local Apple store told me I needed a full board replacement for $1,200. Olive ifixit ultrasonic cleaned the board and replaced two caps for a fraction of the cost. 100% working!',
     verified: true
   },
   {

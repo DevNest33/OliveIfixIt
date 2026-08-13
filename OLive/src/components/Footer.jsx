@@ -1,5 +1,6 @@
 import React from 'react';
-import { Wrench, Mail, MapPin, Clock, ShieldCheck, Heart, Send } from 'lucide-react';
+import { Mail, Clock } from 'lucide-react';
+import BrandLogo from './BrandLogo';
 
 export default function Footer({ onOpenBooking, onOpenTrack }) {
   return (
@@ -9,13 +10,8 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-gray-900">
 
           <div className="lg:col-span-2 space-y-4">
-            <a href="#" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-brand-black flex items-center justify-center text-white shadow-md">
-                <Wrench className="w-5 h-5 text-brand-gold" />
-              </div>
-              <span className="text-xl font-extrabold tracking-tight text-white">
-                Fix<span className="text-brand-gold">Craft</span> Pro
-              </span>
+            <a href="#">
+              <BrandLogo />
             </a>
 
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
@@ -67,7 +63,7 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
             <div className="space-y-2 text-xs text-gray-400 font-semibold">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-gold shrink-0" />
-                <span>support@fixcraftpro.com</span>
+                <span>support@oliveifixit.com</span>
               </div>
               <div className="flex items-start gap-2 pt-1">
                 <Clock className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -83,7 +79,7 @@ export default function Footer({ onOpenBooking, onOpenTrack }) {
 
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <div className="flex items-center gap-2">
-            <span>© {new Date().getFullYear()} FixCraft Pro Technologies. All Rights Reserved.</span>
+            <span>© {new Date().getFullYear()} Olive ifixit. All Rights Reserved.</span>
           </div>
 
           <div className="flex items-center gap-6">

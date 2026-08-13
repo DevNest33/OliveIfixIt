@@ -16,7 +16,7 @@ export default function WhyChooseUsSection({ onOpenBooking }) {
 
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-            Why FixCraft is <span className="text-brand-gold">Different</span>
+            Why Olive ifixit is <span className="text-brand-gold">Different</span>
           </h2>
           <p className="text-gray-400 text-base sm:text-lg">
             We combine factory-level precision equipment with certified master technicians to deliver the fastest, most reliable device repair in the industry.
