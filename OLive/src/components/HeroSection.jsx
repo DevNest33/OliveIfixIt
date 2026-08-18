@@ -223,7 +223,7 @@ export default function HeroSection({ onIntroComplete }) {
         </div>
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32 lg:pt-0 lg:pb-0">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center">
           <div className="w-full max-w-3xl text-center font-display">
             <motion.p
