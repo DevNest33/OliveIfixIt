@@ -78,6 +78,32 @@
     background-color: #111111;
 }
 
+.hero-watermark-word {
+    position: absolute;
+    left: 50%;
+    bottom: 7%;
+    top: auto;
+    transform: translateX(-50%);
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: clamp(56px, 18vw, 96px);
+    letter-spacing: 0;
+    line-height: 1;
+    white-space: nowrap;
+    font-kerning: none;
+    font-variant-ligatures: none;
+    font-feature-settings: "kern" 0, "liga" 0;
+    font-synthesis: none;
+}
+
+@media (min-width: 1024px) {
+    .hero-watermark-word {
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        font-size: clamp(160px, 22vw, 420px);
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
 }

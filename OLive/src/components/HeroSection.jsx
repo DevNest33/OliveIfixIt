@@ -181,18 +181,8 @@ export default function HeroSection({ onIntroComplete }) {
         aria-hidden="true"
       >
         <div
-          className="absolute whitespace-nowrap font-black leading-none"
+          className="hero-watermark-word font-black"
           style={{
-            fontFamily: 'Arial Black, Arial, sans-serif',
-            fontSize: 'clamp(80px, 22vw, 420px)',
-            letterSpacing: '0em',
-            fontKerning: 'none',
-            fontVariantLigatures: 'none',
-            fontFeatureSettings: '"kern" 0, "liga" 0',
-            fontSynthesis: 'none',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
             color: 'transparent',
             WebkitTextStroke: '0.022em rgba(212, 175, 55, 0.12)',
             opacity: glowOpacity > 0.1 ? 1 : 0,
@@ -205,7 +195,7 @@ export default function HeroSection({ onIntroComplete }) {
         </div>
 
         <div
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0"
           style={{
             zIndex: 1,
             opacity: glowOpacity,
@@ -220,18 +210,8 @@ export default function HeroSection({ onIntroComplete }) {
           }}
         >
           <div
-            className="absolute whitespace-nowrap font-black leading-none"
+            className="hero-watermark-word font-black"
             style={{
-              fontFamily: 'Arial Black, Arial, sans-serif',
-              fontSize: 'clamp(80px, 22vw, 420px)',
-              letterSpacing: '0em',
-              fontKerning: 'none',
-              fontVariantLigatures: 'none',
-              fontFeatureSettings: '"kern" 0, "liga" 0',
-              fontSynthesis: 'none',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
               color: 'transparent',
               WebkitTextStroke: `0.028em ${strokeColor}`,
               textShadow: 'none',
@@ -243,7 +223,7 @@ export default function HeroSection({ onIntroComplete }) {
         </div>
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32 lg:pt-0 lg:pb-0">
         <div className="flex justify-center">
           <div className="w-full max-w-3xl text-center font-display">
             <motion.p
