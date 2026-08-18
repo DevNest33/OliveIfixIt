@@ -20,7 +20,7 @@ export default function TrustSection() {
   ];
 
   return (
-    <section className="py-12 bg-black text-white relative overflow-hidden">
+    <section className="py-12 bg-brand-bg text-white relative overflow-hidden">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 

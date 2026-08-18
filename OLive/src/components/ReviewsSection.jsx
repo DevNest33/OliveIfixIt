@@ -1,6 +1,7 @@
 import React from 'react';
 import { CUSTOMER_REVIEWS } from '../data/repairData';
-import { Star, CheckCircle, Quote, ThumbsUp, Sparkles } from 'lucide-react';
+import { Star, CheckCircle, Quote, ThumbsUp } from 'lucide-react';
+import { BrandMark } from './BrandLogo';
 
 export default function ReviewsSection() {
   const filters = [
@@ -10,15 +11,13 @@ export default function ReviewsSection() {
   const filteredReviews = CUSTOMER_REVIEWS;
 
   return (
-    <section id="reviews" className="py-20 bg-black text-white relative overflow-hidden">
-      <div className="absolute top-1/4 left-10 w-96 h-96 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
+    <section id="reviews" className="py-20 bg-brand-bg text-white relative overflow-hidden">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 text-brand-gold text-xs font-extrabold uppercase tracking-wider border border-brand-gold/20">
-            <Sparkles className="w-3.5 h-3.5" />
+            <BrandMark size="sm" />
             Verified Feedback
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">

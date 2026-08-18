@@ -1,6 +1,7 @@
 import React from 'react';
 import { WHY_CHOOSE_US } from '../data/repairData';
 import { BadgeCheck, ShieldCheck, Zap, DollarSign, ArrowRight } from 'lucide-react';
+import { BrandMark } from './BrandLogo';
 
 const iconMap = {
   BadgeCheck,
@@ -11,10 +12,14 @@ const iconMap = {
 
 export default function WhyChooseUsSection({ onOpenBooking }) {
   return (
-    <section id="why-us" className="py-20 bg-black relative">
+    <section id="why-us" className="py-20 bg-brand-bg relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center max-w-3xl mx-auto space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 text-brand-gold text-xs font-extrabold uppercase tracking-wider border border-brand-gold/20">
+            <BrandMark size="sm" />
+            Why Us
+          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             Why Olive ifixit is <span className="text-brand-gold">Different</span>
           </h2>

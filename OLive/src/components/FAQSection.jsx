@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FAQS } from '../data/repairData';
-import { ChevronDown, Search, HelpCircle } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
+import { BrandMark } from './BrandLogo';
 
 export default function FAQSection() {
   const [openId, setOpenId] = useState(1);
@@ -17,12 +18,12 @@ export default function FAQSection() {
   });
 
   return (
-    <section id="faq" className="py-20 bg-black relative">
+    <section id="faq" className="py-20 bg-brand-bg relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 text-brand-gold text-xs font-extrabold uppercase tracking-wider">
-            <HelpCircle className="w-3.5 h-3.5" />
+            <BrandMark size="sm" />
             Got Questions?
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">

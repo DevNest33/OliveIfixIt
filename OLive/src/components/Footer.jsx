@@ -4,18 +4,18 @@ import BrandLogo from './BrandLogo';
 
 export default function Footer({ onOpenBooking }) {
   return (
-    <footer className="bg-black text-white pt-16 pb-12 border-t border-gray-900 relative">
+    <footer className="bg-brand-bg text-white pt-16 pb-12 border-t border-gray-900 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-gray-900">
 
           <div className="lg:col-span-2 space-y-4">
             <a href="#">
-              <BrandLogo />
+              <BrandLogo showTagline />
             </a>
 
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-              The premier express repair center for smartphones, tablets, and laptops. Factory-certified engineers, original OEM grade components, and 3-month zero-cost warranty protection.
+              The premier premium Apple repair center for iPhones, iPads, MacBooks, and more. Factory-certified engineers, original OEM grade components, and 3-month zero-cost warranty protection.
             </p>
 
             <div className="flex items-center gap-3 pt-2">

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import technicianImg from '../assets/technician.png';
 import { getWhatsAppUrl } from '../data/contactConfig';
 
 function WhatsAppIcon({ className }) {
@@ -19,6 +20,7 @@ function WhatsAppIcon({ className }) {
 
 export default function WhatsAppChatWidget({ hidden = false }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showTechnician, setShowTechnician] = useState(false);
   const containerRef = useRef(null);
   const whatsAppUrl = getWhatsAppUrl();
 
@@ -44,12 +46,19 @@ export default function WhatsAppChatWidget({ hidden = false }) {
     };
   }, [isOpen]);
 
-  if (hidden) return null;
+  useEffect(() => {
+    if (isOpen) setShowTechnician(false);
+  }, [isOpen]);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: hidden ? 0 : 1 }}
+      transition={{ duration: 0.7, ease: 'easeOut' }}
       className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-40 flex flex-col items-end gap-3"
+      style={{ pointerEvents: hidden ? 'none' : 'auto' }}
+      aria-hidden={hidden}
     >
       <AnimatePresence>
         {isOpen && (
@@ -67,7 +76,7 @@ export default function WhatsAppChatWidget({ hidden = false }) {
                 <img
                   src={logoImg}
                   alt=""
-                  className="w-8 h-8 rounded-lg object-contain"
+                  className="w-8 h-8 rounded-lg object-contain drop-shadow-[0_0_18px_rgba(212,175,55,0.45)]"
                 />
                 <div>
                   <p className="text-sm font-bold text-white leading-tight">
@@ -104,21 +113,164 @@ export default function WhatsAppChatWidget({ hidden = false }) {
         )}
       </AnimatePresence>
 
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-label={isOpen ? 'Close chat' : 'Open chat'}
-        aria-expanded={isOpen}
-        className="relative w-14 h-14 rounded-full gold-gradient-btn flex items-center justify-center shadow-gold-glow cursor-pointer touch-manipulation"
+      {!isOpen && (
+      <div
+        className="relative hidden md:flex items-end justify-end min-h-14 min-w-14"
+        onMouseEnter={() => setShowTechnician(true)}
+        onMouseLeave={() => setShowTechnician(false)}
       >
-        {!isOpen && (
+        <AnimatePresence mode="wait">
+          {showTechnician ? (
+            <motion.button
+              key="widget-technician"
+              type="button"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => setIsOpen(true)}
+              aria-label="Open chat"
+              className="relative flex items-end justify-end cursor-pointer bg-transparent border-0 p-0"
+            >
+              <div className="absolute left-0 top-4 z-10 w-[180px] -translate-x-[calc(100%-0.5rem)]">
+                <div
+                  className="
+                    relative
+                    rounded-[22px]
+                    bg-[#111]
+                    border
+                    border-brand-gold/40
+                    px-3.5
+                    py-2.5
+                    text-left
+                    shadow-[0_0_18px_rgba(212,175,55,0.28)]
+                  "
+                >
+                  <p className="text-[13px] font-bold text-white leading-snug">
+                    Hey! <span className="text-brand-gold">👋</span>
+                    <br />
+                    Need a hand with that device?
+                  </p>
+                  <p className="mt-1 text-[11px] text-gray-400 font-medium">
+                    We&apos;ll take care of it.
+                  </p>
+                  <span
+                    className="
+                      absolute
+                      -bottom-2
+                      right-5
+                      h-3.5
+                      w-3.5
+                      rotate-45
+                      bg-[#111]
+                      border-r
+                      border-b
+                      border-brand-gold/40
+                    "
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+
+              <img
+                src={technicianImg}
+                alt=""
+                className="
+                  h-[280px]
+                  w-auto
+                  object-contain
+                  object-bottom
+                  object-right
+                  select-none
+                  pointer-events-none
+                  drop-shadow-[0_10px_24px_rgba(212,175,55,0.22)]
+                "
+              />
+            </motion.button>
+          ) : (
+            <motion.button
+              key="chat-button-desktop"
+              type="button"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              onClick={() => setIsOpen(true)}
+              aria-label="Open chat"
+              aria-expanded={false}
+              className="relative w-14 h-14 rounded-full gold-gradient-btn flex items-center justify-center shadow-gold-glow cursor-pointer touch-manipulation"
+            >
+              <span className="absolute inset-0 rounded-full bg-brand-gold/30 animate-ping pointer-events-none" />
+              <span
+                className="
+                  absolute
+                  -top-0.5
+                  -right-0.5
+                  z-20
+                  min-w-[1.15rem]
+                  h-[1.15rem]
+                  px-1
+                  rounded-full
+                  bg-red-500
+                  text-white
+                  text-[10px]
+                  font-extrabold
+                  leading-none
+                  flex
+                  items-center
+                  justify-center
+                  border-2
+                  border-black
+                  shadow-md
+                "
+                aria-label="1 notification"
+              >
+                1
+              </span>
+              <MessageCircle className="w-6 h-6 relative z-10" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+      )}
+
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          aria-label="Open chat"
+          aria-expanded={false}
+          className="relative md:hidden w-14 h-14 rounded-full gold-gradient-btn flex items-center justify-center shadow-gold-glow cursor-pointer touch-manipulation"
+        >
           <span className="absolute inset-0 rounded-full bg-brand-gold/30 animate-ping pointer-events-none" />
-        )}
-        {isOpen ? (
-          <X className="w-6 h-6 relative z-10" />
-        ) : (
+          <span
+            className="
+              absolute
+              -top-0.5
+              -right-0.5
+              z-20
+              min-w-[1.15rem]
+              h-[1.15rem]
+              px-1
+              rounded-full
+              bg-red-500
+              text-white
+              text-[10px]
+              font-extrabold
+              leading-none
+              flex
+              items-center
+              justify-center
+              border-2
+              border-black
+              shadow-md
+            "
+            aria-label="1 notification"
+          >
+            1
+          </span>
           <MessageCircle className="w-6 h-6 relative z-10" />
-        )}
-      </button>
-    </div>
+        </button>
+      )}
+    </motion.div>
   );
 }

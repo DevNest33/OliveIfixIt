@@ -10,6 +10,7 @@
 
     body {
         overflow-x: hidden;
+        background-color: #111111;
     }
 }
 
@@ -70,15 +71,11 @@
 }
 
 .black-gold-gradient-bg {
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    background: #111111;
 }
 
 .hero-mesh-bg {
-    background-color: #000000;
-    background-image:
-        radial-gradient(at 10% 20%, rgba(212, 175, 55, 0.06) 0px, transparent 50%),
-        radial-gradient(at 90% 10%, rgba(212, 175, 55, 0.08) 0px, transparent 50%),
-        radial-gradient(at 50% 80%, rgba(212, 175, 55, 0.05) 0px, transparent 50%);
+    background-color: #111111;
 }
 
 ::-webkit-scrollbar {

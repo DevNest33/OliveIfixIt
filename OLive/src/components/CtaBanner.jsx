@@ -3,13 +3,10 @@ import { Calendar, Zap, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function CtaBanner({ onOpenBooking }) {
   return (
-    <section className="py-16 bg-black relative overflow-hidden">
+    <section className="py-16 bg-brand-bg relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="bg-gradient-to-r from-brand-black via-brand-black-lighter to-brand-black rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 border border-brand-gold/20">
-
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-gold-dark/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="space-y-3 text-center lg:text-left relative z-10 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-extrabold uppercase tracking-wider">

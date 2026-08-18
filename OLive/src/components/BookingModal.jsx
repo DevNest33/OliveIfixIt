@@ -6,7 +6,7 @@ import {
 import { DEVICE_CATEGORIES, REPAIR_ISSUES } from '../data/repairData';
 import { buildBookingWhatsAppMessage, getWhatsAppUrl } from '../data/contactConfig';
 import useModalLock from '../hooks/useModalLock';
-import logoImg from '../assets/logo.png';
+import BrandLogo from './BrandLogo';
 
 const POPULAR_ISSUES = REPAIR_ISSUES.filter((i) => i.popular);
 const OTHER_ISSUE = { id: 'other', title: 'Other', timeEst: 'Varies' };
@@ -134,9 +134,9 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
       >
         {/* Sticky header — always visible, easy to tap close */}
         <div className="bg-black text-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shrink-0 border-b border-gray-800 pt-safe">
-          <div className="flex items-center gap-2 min-w-0 pr-2">
-            <img src={logoImg} alt="Olive ifixit logo" className="w-8 h-8 rounded-lg object-contain shrink-0" />
-            <div className="min-w-0">
+          <div className="flex items-center gap-3 min-w-0 pr-2">
+            <BrandLogo size="sm" className="shrink-0" />
+            <div className="min-w-0 hidden sm:block">
               <h3 className="text-sm sm:text-base font-bold truncate">Book Repair Appointment</h3>
               <p className="text-[10px] sm:text-[11px] text-gray-400 truncate">Quick booking via WhatsApp</p>
             </div>

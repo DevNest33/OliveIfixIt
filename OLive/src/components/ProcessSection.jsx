@@ -1,6 +1,7 @@
 import React from 'react';
 import { REPAIR_PROCESS_STEPS } from '../data/repairData';
 import { Calendar, MapPin, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
+import { BrandMark } from './BrandLogo';
 
 const iconMap = {
   Calendar,
@@ -11,10 +12,14 @@ const iconMap = {
 
 export default function ProcessSection({ onOpenBooking }) {
   return (
-    <section id="process" className="py-20 bg-black relative overflow-hidden">
+    <section id="process" className="py-20 bg-brand-bg relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center max-w-3xl mx-auto space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 text-brand-gold text-xs font-extrabold uppercase tracking-wider border border-brand-gold/20">
+            <BrandMark size="sm" />
+            Our Process
+          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             How The Repair <span className="text-brand-gold">Process Works</span>
           </h2>

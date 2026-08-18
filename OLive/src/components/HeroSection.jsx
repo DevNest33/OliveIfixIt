@@ -1,20 +1,45 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import {
-  Calendar,
-  ShieldCheck,
-  Zap,
-  Star,
-  ArrowRight,
-  Sparkles,
-} from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import screwdriverImg from '../assets/screwdriver.png';
 
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
 
-export default function HeroSection({ onOpenBooking }) {
+function clamp01(value) {
+  return Math.min(1, Math.max(0, value));
+}
 
+function buildRevealMask(mouseX, mouseY) {
+  return `
+    radial-gradient(
+      ellipse 18% 22%
+      at ${mouseX}% ${mouseY}%,
+      black 0%,
+      rgba(0,0,0,0.95) 18%,
+      rgba(0,0,0,0.65) 38%,
+      rgba(0,0,0,0.28) 58%,
+      rgba(0,0,0,0.06) 78%,
+      transparent 100%
+    )
+  `;
+}
+
+const TIMING = {
+  hook: 0.4,
+  hookDuration: 0.6,
+  pauseAfterHook: 0.75,
+  ifixit: 0.4 + 0.6 + 0.75,
+  ifixitDuration: 0.65,
+  revealAll: 0.4 + 0.6 + 0.75 + 0.65 + 0.35,
+  revealDuration: 0.8,
+};
+
+export default function HeroSection({ onIntroComplete }) {
   const sectionRef = useRef(null);
+  const introStartRef = useRef(Date.now());
+  const reduceMotion = useReducedMotion();
 
   const targetRef = useRef({
     x: 0.5,
@@ -26,95 +51,62 @@ export default function HeroSection({ onOpenBooking }) {
   const currentRef = useRef({
     x: 0.5,
     y: 0.5,
-    opacity: 0.85,
+    opacity: 0,
   });
 
   const [, forceRender] = useState(0);
 
+  useEffect(() => {
+    if (reduceMotion) {
+      onIntroComplete?.();
+      return undefined;
+    }
 
-  /* =========================================================
-     CURSOR TRACKING
-     ========================================================= */
+    const timer = setTimeout(() => onIntroComplete?.(), TIMING.revealAll * 1000);
+    return () => clearTimeout(timer);
+  }, [reduceMotion, onIntroComplete]);
 
   useEffect(() => {
-
     const section = sectionRef.current;
-
     if (!section) return;
 
-
     const reducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia(
-        '(prefers-reduced-motion: reduce)'
-      ).matches;
+      reduceMotion ||
+      (typeof window !== 'undefined' &&
+        window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
+    if (reducedMotion) {
+      currentRef.current.opacity = 0.7;
+    }
 
     const isTouch =
       typeof window !== 'undefined' &&
-      (
-        'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0
-      );
-
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
     const handleMouseMove = (event) => {
-
-      const rect =
-        section.getBoundingClientRect();
-
-
-      targetRef.current.x =
-        (event.clientX - rect.left) /
-        rect.width;
-
-
-      targetRef.current.y =
-        (event.clientY - rect.top) /
-        rect.height;
-
-
+      const rect = section.getBoundingClientRect();
+      targetRef.current.x = (event.clientX - rect.left) / rect.width;
+      targetRef.current.y = (event.clientY - rect.top) / rect.height;
       targetRef.current.active = true;
       targetRef.current.manual = true;
     };
 
-
     const handleMouseLeave = () => {
-
-      // Keep ambient glow sweeping — do not hide on leave
       targetRef.current.manual = false;
-
     };
 
-
     if (!reducedMotion && !isTouch) {
-
-      section.addEventListener(
-        'mousemove',
-        handleMouseMove
-      );
-
-      section.addEventListener(
-        'mouseleave',
-        handleMouseLeave
-      );
-
+      section.addEventListener('mousemove', handleMouseMove);
+      section.addEventListener('mouseleave', handleMouseLeave);
     }
-
 
     let raf = 0;
 
-
     const animate = () => {
+      const target = targetRef.current;
+      const current = currentRef.current;
 
-      const target =
-        targetRef.current;
-
-      const current =
-        currentRef.current;
-
-      // Always auto-sweep so only parts of REPAIR are lit without requiring hover
       if (!reducedMotion && !target.manual) {
         const t = Date.now() / 1000;
         target.x = 0.5 + Math.sin(t * 0.45) * 0.34;
@@ -123,126 +115,61 @@ export default function HeroSection({ onOpenBooking }) {
 
       target.active = true;
 
+      const ease = reducedMotion ? 1 : target.manual ? 0.085 : 0.045;
 
-      const ease =
-        reducedMotion
-          ? 1
-          : target.manual
-            ? 0.085
-            : 0.045;
+      current.x += (target.x - current.x) * ease;
+      current.y += (target.y - current.y) * ease;
 
+      const elapsed = (Date.now() - introStartRef.current) / 1000;
+      const watermarkReady = reducedMotion || elapsed >= TIMING.revealAll;
+      const targetOpacity = watermarkReady ? (reducedMotion ? 0.7 : 1) : 0;
+      current.opacity += (targetOpacity - current.opacity) * 0.075;
 
-      current.x +=
-        (target.x - current.x) *
-        ease;
-
-
-      current.y +=
-        (target.y - current.y) *
-        ease;
-
-
-      const targetOpacity =
-        reducedMotion ? 0.55 : 0.85;
-
-
-      current.opacity +=
-        (targetOpacity -
-          current.opacity) *
-        0.075;
-
-
-      forceRender(
-        (value) =>
-          (value + 1) % 1000000
-      );
-
-
-      raf =
-        requestAnimationFrame(
-          animate
-        );
-
+      forceRender((value) => (value + 1) % 1000000);
+      raf = requestAnimationFrame(animate);
     };
 
-
-    raf =
-      requestAnimationFrame(
-        animate
-      );
-
+    raf = requestAnimationFrame(animate);
 
     return () => {
-
       cancelAnimationFrame(raf);
-
-
       if (!reducedMotion && !isTouch) {
-
-        section.removeEventListener(
-          'mousemove',
-          handleMouseMove
-        );
-
-        section.removeEventListener(
-          'mouseleave',
-          handleMouseLeave
-        );
-
+        section.removeEventListener('mousemove', handleMouseMove);
+        section.removeEventListener('mouseleave', handleMouseLeave);
       }
-
     };
+  }, [reduceMotion]);
 
-  }, []);
+  const current = currentRef.current;
+  const mouseX = current.x * 100;
+  const mouseY = current.y * 100;
+  const glowOpacity = current.opacity;
 
+  const goldBlend = clamp01((current.x - 0.28) / 0.52);
 
-  /* =========================================================
-     CURRENT CURSOR STATE
-     ========================================================= */
+  const strokeR = Math.round(lerp(212, 255, goldBlend));
+  const strokeG = Math.round(lerp(175, 255, goldBlend));
+  const strokeB = Math.round(lerp(55, 255, goldBlend));
+  const strokeA = lerp(0.85, 1, goldBlend);
 
-  const current =
-    currentRef.current;
+  const strokeColor = `rgba(${strokeR}, ${strokeG}, ${strokeB}, ${strokeA})`;
 
-
-  const mouseX =
-    current.x * 100;
-
-
-  const mouseY =
-    current.y * 100;
-
-
-  const glowOpacity =
-    current.opacity;
-
-
-  /* =========================================================
-     COMPONENT
-     ========================================================= */
+  const hookDelay = reduceMotion ? 0 : TIMING.hook;
+  const ifixitDelay = reduceMotion ? 0 : TIMING.ifixit;
+  const revealDelay = reduceMotion ? 0 : TIMING.revealAll;
 
   return (
-
     <section
       ref={sectionRef}
       className="
         relative
-        min-h-[85dvh]
-        sm:min-h-[720px]
-        lg:min-h-[780px]
-        bg-black
+        min-h-dvh
+        bg-brand-bg
         overflow-hidden
         flex
         items-center
-        pt-20
-        sm:pt-0
       "
     >
-
-
-      {/* =====================================================
-          GIANT REPAIR BACKGROUND
-          ===================================================== */}
-
       <div
         className="
           absolute
@@ -253,618 +180,165 @@ export default function HeroSection({ onOpenBooking }) {
         "
         aria-hidden="true"
       >
-
-
-        {/* ===================================================
-            BASE REPAIR
-
-            IMPORTANT:
-
-            This is ONLY the faint resting outline.
-
-            It does NOT glow.
-            It does NOT blur.
-            It does NOT contain a second stroke.
-            =================================================== */}
-
         <div
-  className="
-    absolute
-    whitespace-nowrap
-    font-black
-    leading-none
-  "
-  style={{
-    fontFamily: 'Arial Black, Arial, sans-serif',
-
-    fontSize:
-      'clamp(80px, 22vw, 420px)',
-
-    letterSpacing:
-      '0em',
-
-    fontKerning:
-      'none',
-
-    fontVariantLigatures:
-      'none',
-
-    fontFeatureSettings:
-      '"kern" 0, "liga" 0',
-
-    fontSynthesis:
-      'none',
-
-    top: '50%',
-    left: '50%',
-
-    transform:
-      'translate(-50%, -50%)',
-
-    color:
-      'transparent',
-
-    /*
-     * Use em-based stroke so outline thickness scales with
-     * font size. Fixed 1px strokes alias / look pixelated
-     * when the letters are huge and the page is zoomed out.
-     */
-    WebkitTextStroke:
-      '0.018em rgba(212, 175, 55, 0.04)',
-
-    opacity: 1,
-
-    filter: 'none',
-
-    textShadow: 'none',
-  }}
->
-  REPAIR
-</div>
-
-
-        {/* ===================================================
-            INTERACTIVE REPAIR
-
-            The cursor reveals this layer.
-
-            IMPORTANT:
-
-            The glow is attached to the OUTLINE.
-            The letter interior remains transparent.
-            =================================================== */}
-
-        <div
-          className="
-            absolute
-            inset-0
-            flex
-            items-center
-            justify-center
-          "
+          className="absolute whitespace-nowrap font-black leading-none"
           style={{
-
-            zIndex: 1,
-
-
-            opacity:
-              glowOpacity,
-
-
-            WebkitMaskImage: `
-              radial-gradient(
-                ellipse 18% 22%
-                at ${mouseX}% ${mouseY}%,
-
-                black 0%,
-
-                rgba(0,0,0,0.95) 18%,
-
-                rgba(0,0,0,0.65) 38%,
-
-                rgba(0,0,0,0.28) 58%,
-
-                rgba(0,0,0,0.06) 78%,
-
-                transparent 100%
-              )
-            `,
-
-
-            maskImage: `
-              radial-gradient(
-                ellipse 18% 22%
-                at ${mouseX}% ${mouseY}%,
-
-                black 0%,
-
-                rgba(0,0,0,0.95) 18%,
-
-                rgba(0,0,0,0.65) 38%,
-
-                rgba(0,0,0,0.28) 58%,
-
-                rgba(0,0,0,0.06) 78%,
-
-                transparent 100%
-              )
-            `,
-
-
-            WebkitMaskRepeat:
-              'no-repeat',
-
-
-            maskRepeat:
-              'no-repeat',
-
-
-            WebkitMaskSize:
-              '100% 100%',
-
-
-            maskSize:
-              '100% 100%',
+            fontFamily: 'Arial Black, Arial, sans-serif',
+            fontSize: 'clamp(80px, 22vw, 420px)',
+            letterSpacing: '0em',
+            fontKerning: 'none',
+            fontVariantLigatures: 'none',
+            fontFeatureSettings: '"kern" 0, "liga" 0',
+            fontSynthesis: 'none',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'transparent',
+            WebkitTextStroke: '0.022em rgba(212, 175, 55, 0.12)',
+            opacity: glowOpacity > 0.1 ? 1 : 0,
+            filter: 'none',
+            textShadow: 'none',
+            transition: 'opacity 0.6s ease',
           }}
         >
-
-          <div
-  className="
-    absolute
-    whitespace-nowrap
-    font-black
-    leading-none
-  "
-  style={{
-    fontFamily: 'Arial Black, Arial, sans-serif',
-
-    fontSize:
-      'clamp(80px, 22vw, 420px)',
-
-    letterSpacing:
-      '0em',
-
-    fontKerning:
-      'none',
-
-    fontVariantLigatures:
-      'none',
-
-    fontFeatureSettings:
-      '"kern" 0, "liga" 0',
-
-    fontSynthesis:
-      'none',
-
-    top: '50%',
-    left: '50%',
-
-    transform:
-      'translate(-50%, -50%)',
-
-    color:
-      'transparent',
-
-    WebkitTextStroke:
-      '0.022em rgba(255, 202, 28, 1)',
-
-    textShadow:
-      'none',
-
-    filter:
-      'drop-shadow(0 0 6px rgba(255, 202, 28, 0.75)) drop-shadow(0 0 14px rgba(255, 202, 28, 0.35))',
-  }}
->
-  REPAIR
-</div>
+          REPAIR
         </div>
-
-      </div>
-
-
-      {/* =====================================================
-          HERO CONTENT
-          ===================================================== */}
-
-      <div
-        className="
-          relative
-          z-10
-          w-full
-          max-w-7xl
-          mx-auto
-          px-4
-          sm:px-6
-          lg:px-8
-        "
-      >
 
         <div
-          className="
-            flex
-            justify-center
-          "
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            zIndex: 1,
+            opacity: glowOpacity,
+            WebkitMaskImage: buildRevealMask(mouseX, mouseY),
+            maskImage: buildRevealMask(mouseX, mouseY),
+            WebkitMaskRepeat: 'no-repeat',
+            maskRepeat: 'no-repeat',
+            WebkitMaskSize: '100% 100%',
+            maskSize: '100% 100%',
+            WebkitMaskComposite: 'source-over',
+            maskComposite: 'add',
+          }}
         >
-
           <div
-            className="
-              w-full
-              max-w-4xl
-              text-center
-              space-y-6
-            "
+            className="absolute whitespace-nowrap font-black leading-none"
+            style={{
+              fontFamily: 'Arial Black, Arial, sans-serif',
+              fontSize: 'clamp(80px, 22vw, 420px)',
+              letterSpacing: '0em',
+              fontKerning: 'none',
+              fontVariantLigatures: 'none',
+              fontFeatureSettings: '"kern" 0, "liga" 0',
+              fontSynthesis: 'none',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              color: 'transparent',
+              WebkitTextStroke: `0.028em ${strokeColor}`,
+              textShadow: 'none',
+              filter: 'none',
+            }}
           >
-
-
-            {/* =================================================
-                BADGE
-                ================================================= */}
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.5,
-              }}
-              className="
-                inline-flex
-                items-center
-                gap-2
-                px-3.5
-                py-1.5
-                rounded-full
-                bg-brand-gold/10
-                border
-                border-brand-gold/20
-                text-brand-gold
-                text-xs
-                font-extrabold
-                uppercase
-                tracking-wider
-              "
-            >
-
-              <Sparkles
-                className="
-                  w-3.5
-                  h-3.5
-                "
-              />
-
-              #1 Express Mobile &amp;
-              Electronics Repair
-
-            </motion.div>
-
-
-            {/* =================================================
-                HEADLINE
-                ================================================= */}
-
-            <motion.h1
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 0.1,
-              }}
-              className="
-                text-4xl
-                sm:text-6xl
-                lg:text-7xl
-                font-extrabold
-                text-white
-                tracking-tight
-                leading-[1.05]
-              "
-            >
-
-              Broken screen?
-
-              <br />
-
-              <span
-                className="
-                  bg-gradient-to-r
-                  from-brand-gold
-                  via-brand-gold-light
-                  to-brand-gold
-                  bg-clip-text
-                  text-transparent
-                  inline-flex
-                  items-center
-                  justify-center
-                  gap-0.5
-                "
-              >
-
-                Just if
-
-                <img
-                  src={screwdriverImg}
-                  alt="screwdriver icon"
-                  className="
-                    inline-block
-                    w-5
-                    sm:w-6
-                    h-11
-                    sm:h-14
-                    object-contain
-                    align-middle
-                    translate-y-1
-                  "
-                />
-
-                xit
-
-              </span>
-
-            </motion.h1>
-
-
-            {/* =================================================
-                DESCRIPTION
-                ================================================= */}
-
-            <motion.p
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 0.2,
-              }}
-              className="
-                text-gray-400
-                text-base
-                sm:text-lg
-                max-w-2xl
-                mx-auto
-                leading-relaxed
-                font-medium
-              "
-            >
-
-              Screen replacements, battery replacements,
-              water damage recovery, charging issues and
-              more for smartphones, tablets &amp; laptops.
-
-            </motion.p>
-
-
-            {/* =================================================
-                BUTTON
-                ================================================= */}
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 0.3,
-              }}
-              className="
-                flex
-                justify-center
-                pt-2
-              "
-            >
-
-              <button
-                onClick={() =>
-                  onOpenBooking()
-                }
-                className="
-                  gold-gradient-btn
-                  w-full
-                  sm:w-auto
-                  px-8
-                  py-4
-                  rounded-xl
-                  font-bold
-                  text-base
-                  flex
-                  items-center
-                  justify-center
-                  gap-3
-                  group
-                  shadow-gold-glow
-                  cursor-pointer
-                  touch-manipulation
-                "
-              >
-
-                <Calendar
-                  className="
-                    w-5
-                    h-5
-                    group-hover:scale-110
-                    transition-transform
-                  "
-                />
-
-                Book Repair
-
-                <ArrowRight
-                  className="
-                    w-4
-                    h-4
-                    group-hover:translate-x-1
-                    transition-transform
-                  "
-                />
-
-              </button>
-
-            </motion.div>
-
-
-            {/* =================================================
-                TRUST ROW
-                ================================================= */}
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 0.4,
-              }}
-              className="
-                max-w-3xl
-                mx-auto
-                pt-6
-                border-t
-                border-gray-800
-                flex
-                flex-wrap
-                items-center
-                justify-center
-                gap-x-10
-                gap-y-4
-                text-xs
-                text-gray-400
-                font-semibold
-              "
-            >
-
-
-              {/* Rating */}
-
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-1.5
-                "
-              >
-
-                <Star
-                  className="
-                    w-4
-                    h-4
-                    fill-amber-400
-                    text-amber-400
-                  "
-                />
-
-                <span>
-
-                  <strong
-                    className="text-white"
-                  >
-                    4.9/5
-                  </strong>{' '}
-
-                  (1,800+ Reviews)
-
-                </span>
-
-              </div>
-
-
-              {/* Express */}
-
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-1.5
-                "
-              >
-
-                <Zap
-                  className="
-                    w-4
-                    h-4
-                    text-brand-gold
-                  "
-                />
-
-                <span>
-
-                  <strong
-                    className="text-white"
-                  >
-                    Express
-                  </strong>{' '}
-
-                  Turnaround
-
-                </span>
-
-              </div>
-
-
-              {/* Warranty */}
-
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-1.5
-                "
-              >
-
-                <ShieldCheck
-                  className="
-                    w-4
-                    h-4
-                    text-brand-gold
-                  "
-                />
-
-                <span>
-
-                  <strong
-                    className="text-white"
-                  >
-                    3 Months
-                  </strong>{' '}
-
-                  Warranty
-
-                </span>
-
-              </div>
-
-            </motion.div>
-
+            REPAIR
           </div>
-
         </div>
-
       </div>
 
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center">
+          <div className="w-full max-w-3xl text-center font-display">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: TIMING.hookDuration, delay: hookDelay }}
+              className="
+                text-[2.6rem]
+                sm:text-6xl
+                lg:text-[4.75rem]
+                font-light
+                text-white
+                tracking-[-0.02em]
+                leading-[1.08]
+              "
+            >
+              <span className="inline-block">Broken phone?</span>
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: TIMING.ifixitDuration, delay: ifixitDelay }}
+              className="
+                mt-2
+                sm:mt-3
+                text-[2.6rem]
+                sm:text-6xl
+                lg:text-[4.75rem]
+                font-light
+                tracking-[-0.02em]
+                leading-[1.08]
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                sm:gap-3
+              "
+            >
+              <span className="font-light text-white">Just</span>
+              <span className="font-semibold inline-flex items-center">
+                <span className="text-brand-gold-light">i</span>
+                <span className="text-brand-gold">fix</span>
+                {/* <span className="text-brand-gold"></span> */}
+                <span className="text-white inline-flex items-center">
+                  <img
+                    src={screwdriverImg}
+                    alt=""
+                    className="
+                      inline-block
+                      w-[0.38em]
+                      sm:w-[0.4em]
+                      h-[0.95em]
+                      sm:h-[1.05em]
+                      lg:h-[1.1em]
+                      object-contain
+                      mx-[0.02em]
+                      translate-y-[-0.05em]
+                    "
+                  />
+                  <span>t</span>
+                </span>
+              </span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: TIMING.revealDuration, delay: revealDelay }}
+              className="mt-8 sm:mt-10 flex flex-col items-center gap-5"
+            >
+              <span className="block w-8 h-px bg-brand-gold/60" />
+
+              <p
+                className="
+                  text-[10px]
+                  sm:text-[11px]
+                  uppercase
+                  tracking-[0.22em]
+                  sm:tracking-[0.32em]
+                  text-brand-gold
+                  font-medium
+                  max-w-lg
+                  mx-auto
+                  leading-[1.9]
+                "
+              >
+                Screen replacements · Battery replacements · Water
+                damage recovery · Charging issues for smartphones,
+                tablets &amp; laptops
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Calendar, Menu, X } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 
-export default function Navbar({ onOpenBooking }) {
+export default function Navbar({ onOpenBooking, visible = true }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -36,15 +37,26 @@ export default function Navbar({ onOpenBooking }) {
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 pt-safe ${isScrolled
-      ? 'bg-black/85 backdrop-blur-md border-b border-gray-800 shadow-sm py-3'
-      : 'bg-transparent py-4 sm:py-5'
-      }`}>
+    <motion.header
+      initial={{ opacity: 0 }}
+      animate={{ opacity: visible ? 1 : 0 }}
+      transition={{ duration: 0.7, ease: 'easeOut' }}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${isScrolled
+        ? 'bg-brand-bg/90 backdrop-blur-md border-b border-gray-800 shadow-sm'
+        : 'bg-transparent'
+        }`}
+      style={{
+        paddingTop: 'max(0.7rem, env(safe-area-inset-top))',
+        paddingBottom: '0.7rem',
+        pointerEvents: visible ? 'auto' : 'none',
+      }}
+      aria-hidden={!visible}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-8">
 
           <a href="#" className="group">
-            <BrandLogo showTagline />
+            <BrandLogo size="lg" showTagline />
           </a>
 
           <nav className="hidden lg:flex items-center space-x-7">
@@ -93,7 +105,7 @@ export default function Navbar({ onOpenBooking }) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-black border-b border-gray-800 px-4 pt-4 pb-6 space-y-4 shadow-xl max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
+        <div className="md:hidden bg-brand-bg border-b border-gray-800 px-4 pt-4 pb-6 space-y-4 shadow-xl max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <a
@@ -121,6 +133,6 @@ export default function Navbar({ onOpenBooking }) {
           </div>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 }

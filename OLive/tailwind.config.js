@@ -16,8 +16,8 @@ export default {
           'gold-dark': '#B8942F',
           'gold-glow': 'rgba(212, 175, 55, 0.15)',
           'gold-bright': '#FFD700',
-          bg: '#000000',
-          'bg-secondary': '#0A0A0A',
+          bg: '#111111',
+          'bg-secondary': '#0D0D0D',
           'bg-card': '#111111',
           text: '#FFFFFF',
           'text-muted': '#9CA3AF',
@@ -25,6 +25,7 @@ export default {
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Outfit', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'glass': '0 8px 32px 0 rgba(212, 175, 55, 0.08)',
