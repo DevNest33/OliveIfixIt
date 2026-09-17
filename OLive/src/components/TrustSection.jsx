@@ -1,6 +1,12 @@
 import React from 'react';
 import { TRUST_METRICS } from '../data/repairData';
 import { Wrench, Star, Clock, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import appleLogo from '../assets/brands/apple.png';
+import samsungLogo from '../assets/brands/samsung.png';
+import hpLogo from '../assets/brands/hp.png';
+import dellLogo from '../assets/brands/dell.png';
+import lenovoLogo from '../assets/brands/lenovo.png';
+import sonyLogo from '../assets/brands/sony.png';
 
 const iconMap = {
   Wrench,
@@ -9,16 +15,16 @@ const iconMap = {
   ShieldCheck
 };
 
-export default function TrustSection() {
-  const brandLogos = [
-    { name: 'Apple iPhone & Mac', label: 'Apple Authorized Spec' },
-    { name: 'Samsung Galaxy', label: 'Samsung OEM Standard' },
-    { name: 'Google Pixel', label: 'Google Pixel Certified' },
-    { name: 'Dell & XPS', label: 'Dell Laptop Specialist' },
-    { name: 'Lenovo ThinkPad', label: 'Lenovo Service Ready' },
-    { name: 'Microsoft Surface', label: 'Surface Repair Qualified' },
-  ];
+const brandLogos = [
+  { name: 'Apple', src: appleLogo, imgClass: 'h-8' },
+  { name: 'Samsung', src: samsungLogo, imgClass: 'h-6' },
+  { name: 'HP', src: hpLogo, imgClass: 'h-9' },
+  { name: 'Dell', src: dellLogo, imgClass: 'h-6' },
+  { name: 'Lenovo', src: lenovoLogo, imgClass: 'h-7 scale-[1.65]' },
+  { name: 'Sony', src: sonyLogo, imgClass: 'h-7 scale-[1.55]' },
+];
 
+export default function TrustSection() {
   return (
     <section className="py-12 bg-brand-bg text-white relative overflow-hidden">
 
@@ -69,13 +75,16 @@ export default function TrustSection() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
-            {brandLogos.map((brand, bIdx) => (
+            {brandLogos.map((brand) => (
               <div
-                key={bIdx}
-                className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-2"
+                key={brand.name}
+                className="h-12 w-[92px] sm:w-24 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center px-3 overflow-hidden hover:bg-white/[0.08] hover:border-white/20 transition-colors"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-gold" />
-                {brand.name}
+                <img
+                  src={brand.src}
+                  alt={`${brand.name} logo`}
+                  className={`w-auto max-w-full object-contain ${brand.imgClass}`}
+                />
               </div>
             ))}
           </div>

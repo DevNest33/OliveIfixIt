@@ -5,6 +5,25 @@ import {
   ArrowRight, Clock, ShieldCheck, Check
 } from 'lucide-react';
 import { BrandMark } from './BrandLogo';
+import crackedScreenHover from '../assets/services/cracked-screen.jpg';
+import batteryReplacementHover from '../assets/services/battery-replacement.jpg';
+import chargingPortHover from '../assets/services/charging-port.jpg';
+import waterDamageHover from '../assets/services/water-damage.jpg';
+import cameraLensHover from '../assets/services/camera-lens.jpg';
+import speakerMicrophoneHover from '../assets/services/speaker-microphone.jpg';
+import softwareDiagnosticsHover from '../assets/services/software-diagnostics.jpg';
+import dataRecoveryHover from '../assets/services/data-recovery.jpg';
+
+const SERVICE_HOVER_IMAGES = {
+  screen: { src: crackedScreenHover, position: 'object-[center_70%]' },
+  battery: { src: batteryReplacementHover, position: 'object-center' },
+  charging: { src: chargingPortHover, position: 'object-[58%_48%]' },
+  water: { src: waterDamageHover, position: 'object-[55%_58%]' },
+  camera: { src: cameraLensHover, position: 'object-[58%_52%]' },
+  speaker: { src: speakerMicrophoneHover, position: 'object-[58%_50%]' },
+  software: { src: softwareDiagnosticsHover, position: 'object-[center_42%]' },
+  data: { src: dataRecoveryHover, position: 'object-[center_48%]' },
+};
 
 const iconComponents = {
   Smartphone,
@@ -68,18 +87,34 @@ export default function ServicesSection({ onSelectService }) {
         <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredServices.map((service) => {
             const Icon = iconComponents[service.icon] || Smartphone;
+            const hoverImage = SERVICE_HOVER_IMAGES[service.id];
             return (
               <div
                 key={service.id}
                 className="bg-gray-900 rounded-2xl p-6 border border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between group relative overflow-hidden"
               >
+                {hoverImage && (
+                  <>
+                    <img
+                      src={hoverImage.src}
+                      alt=""
+                      aria-hidden="true"
+                      className={`absolute inset-0 h-full w-full object-cover ${hoverImage.position} opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100 pointer-events-none`}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/20 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
+                    />
+                  </>
+                )}
+
                 {service.popular && (
-                  <span className="absolute top-4 right-4 bg-brand-gold/10 text-brand-gold text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border border-brand-gold/20">
+                  <span className="absolute top-4 right-4 z-20 bg-brand-gold/10 text-brand-gold text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border border-brand-gold/20">
                     Popular
                   </span>
                 )}
 
-                <div>
+                <div className="relative z-10">
                   <div className="w-14 h-14 rounded-2xl bg-gray-800 group-hover:bg-brand-gold text-brand-gold group-hover:text-black flex items-center justify-center transition-colors duration-300 shadow-inner">
                     <Icon className="w-7 h-7" />
                   </div>
@@ -87,12 +122,14 @@ export default function ServicesSection({ onSelectService }) {
                   <h3 className="text-xl font-bold text-white mt-5 group-hover:text-brand-gold transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-2 font-normal leading-relaxed">
+                  <p className={`text-sm mt-2 font-normal leading-relaxed transition-colors duration-500 ${
+                    hoverImage ? 'text-gray-500 group-hover:text-gray-200' : 'text-gray-500'
+                  }`}>
                     {service.desc}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-5 border-t border-gray-800">
+                <div className={`relative z-10 mt-6 pt-5 ${hoverImage ? 'border-t border-gray-800 group-hover:border-white/10' : 'border-t border-gray-800'}`}>
                   <button
                     onClick={() => onSelectService(service)}
                     className="w-full py-2.5 rounded-xl font-bold text-sm bg-gray-800 text-brand-gold group-hover:bg-brand-gold group-hover:text-black transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-sm"

@@ -2,12 +2,30 @@ import React from 'react';
 import { REPAIR_PROCESS_STEPS } from '../data/repairData';
 import { Calendar, MapPin, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
 import { BrandMark } from './BrandLogo';
+import bookAppointmentHover from '../assets/process/book-appointment.jpg';
+import bringOrSendHover from '../assets/process/bring-or-send.jpg';
+import precisionRepairHover from '../assets/process/precision-repair.jpg';
 
 const iconMap = {
   Calendar,
   MapPin,
   Wrench,
   CheckCircle2
+};
+
+const PROCESS_HOVER_IMAGES = {
+  'Book Appointment': {
+    src: bookAppointmentHover,
+    position: 'object-[center_48%]',
+  },
+  'Bring or Send Device': {
+    src: bringOrSendHover,
+    position: 'object-[center_46%]',
+  },
+  'Precision Repair': {
+    src: precisionRepairHover,
+    position: 'object-[center_52%]',
+  },
 };
 
 export default function ProcessSection({ onOpenBooking }) {
@@ -34,12 +52,28 @@ export default function ProcessSection({ onOpenBooking }) {
 
           {REPAIR_PROCESS_STEPS.map((step, idx) => {
             const Icon = iconMap[step.icon] || Calendar;
+            const hoverImage = PROCESS_HOVER_IMAGES[step.title];
             return (
               <div
                 key={idx}
-                className="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 relative z-10 flex flex-col justify-between group hover:-translate-y-2"
+                className="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 relative z-10 flex flex-col justify-between group hover:-translate-y-2 overflow-hidden"
               >
-                <div>
+                {hoverImage && (
+                  <>
+                    <img
+                      src={hoverImage.src}
+                      alt=""
+                      aria-hidden="true"
+                      className={`absolute inset-0 h-full w-full object-cover ${hoverImage.position} opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100 pointer-events-none`}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/25 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
+                    />
+                  </>
+                )}
+
+                <div className="relative z-10">
                   <div className="flex items-center justify-between mb-6">
                     <div className="w-14 h-14 rounded-2xl bg-black border border-gray-700 group-hover:bg-brand-gold group-hover:border-brand-gold text-brand-gold group-hover:text-black flex items-center justify-center transition-colors duration-300 shadow-sm">
                       <Icon className="w-7 h-7" />
@@ -52,13 +86,15 @@ export default function ProcessSection({ onOpenBooking }) {
                   <h3 className="text-xl font-bold text-white group-hover:text-brand-gold transition-colors">
                     {step.title}
                   </h3>
-                  <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+                  <p className={`text-sm mt-2 leading-relaxed transition-colors duration-500 ${
+                    hoverImage ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-400'
+                  }`}>
                     {step.desc}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-gray-500">Duration:</span>
+                <div className={`relative z-10 mt-6 pt-4 flex items-center justify-between ${hoverImage ? 'border-t border-gray-800 group-hover:border-white/10' : 'border-t border-gray-800'}`}>
+                  <span className={`text-xs font-semibold ${hoverImage ? 'text-gray-500 group-hover:text-gray-300' : 'text-gray-500'}`}>Duration:</span>
                   <span className="text-xs font-bold text-brand-gold bg-brand-gold/10 px-2.5 py-1 rounded-full">
                     {step.timeEst}
                   </span>

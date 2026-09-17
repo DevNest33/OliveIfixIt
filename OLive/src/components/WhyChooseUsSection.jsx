@@ -2,12 +2,35 @@ import React from 'react';
 import { WHY_CHOOSE_US } from '../data/repairData';
 import { BadgeCheck, ShieldCheck, Zap, DollarSign, ArrowRight } from 'lucide-react';
 import { BrandMark } from './BrandLogo';
+import experiencedSpecialistsHover from '../assets/why-us/experienced-specialists.jpg';
+import premiumPartsHover from '../assets/why-us/premium-parts.jpg';
+import quickDiagnosisHover from '../assets/why-us/quick-diagnosis.jpg';
+import noHiddenChargesHover from '../assets/why-us/no-hidden-charges.jpg';
 
 const iconMap = {
   BadgeCheck,
   ShieldCheck,
   Zap,
   DollarSign
+};
+
+const WHY_HOVER_IMAGES = {
+  'Experienced Repair Specialists': {
+    src: experiencedSpecialistsHover,
+    position: 'object-[32%_58%]',
+  },
+  'High-Quality Compatible Parts': {
+    src: premiumPartsHover,
+    position: 'object-[center_48%]',
+  },
+  'Quick Diagnosis & Repair': {
+    src: quickDiagnosisHover,
+    position: 'object-[center_52%]',
+  },
+  'No Hidden Charges': {
+    src: noHiddenChargesHover,
+    position: 'object-[center_42%]',
+  },
 };
 
 export default function WhyChooseUsSection({ onOpenBooking }) {
@@ -31,14 +54,30 @@ export default function WhyChooseUsSection({ onOpenBooking }) {
         <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {WHY_CHOOSE_US.map((card, idx) => {
             const Icon = iconMap[card.icon] || BadgeCheck;
+            const hoverImage = WHY_HOVER_IMAGES[card.title];
             return (
               <div
                 key={idx}
                 className="bg-gray-900 rounded-3xl p-8 border border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-28 h-28 bg-brand-gold/5 rounded-bl-full pointer-events-none group-hover:bg-brand-gold/10 transition-colors" />
+                {hoverImage && (
+                  <>
+                    <img
+                      src={hoverImage.src}
+                      alt=""
+                      aria-hidden="true"
+                      className={`absolute inset-0 h-full w-full object-cover ${hoverImage.position} opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100 pointer-events-none`}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/25 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
+                    />
+                  </>
+                )}
 
-                <div>
+                <div className={`absolute top-0 right-0 w-28 h-28 bg-brand-gold/5 rounded-bl-full pointer-events-none group-hover:bg-brand-gold/10 transition-all ${hoverImage ? 'group-hover:opacity-0' : ''}`} />
+
+                <div className="relative z-10">
                   <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-brand-gold bg-brand-gold/10 px-3 py-1 rounded-full mb-6">
                     {card.badge}
                   </span>
@@ -51,12 +90,14 @@ export default function WhyChooseUsSection({ onOpenBooking }) {
                     {card.title}
                   </h3>
 
-                  <p className="text-gray-400 text-sm mt-3 leading-relaxed">
+                  <p className={`text-sm mt-3 leading-relaxed transition-colors duration-500 ${
+                    hoverImage ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-400'
+                  }`}>
                     {card.description}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-gray-800 flex items-center text-xs font-bold text-brand-gold">
+                <div className={`relative z-10 mt-8 pt-4 flex items-center text-xs font-bold text-brand-gold ${hoverImage ? 'border-t border-gray-800 group-hover:border-white/10' : 'border-t border-gray-800'}`}>
                   <span>Guaranteed Standards</span>
                 </div>
               </div>
