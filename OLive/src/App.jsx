@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import TrustSection from './components/TrustSection';
@@ -11,11 +11,13 @@ import Footer from './components/Footer';
 import SectionDivider from './components/SectionDivider';
 import BookingModal from './components/BookingModal';
 import WhatsAppChatWidget from './components/WhatsAppChatWidget';
+import PwaInstallBanner from './components/PwaInstallBanner';
 
 export default function App() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedBookingData, setSelectedBookingData] = useState(null);
   const [heroIntroComplete, setHeroIntroComplete] = useState(false);
+  const openedBookingFromQuery = useRef(false);
 
   const handleOpenBooking = (initialData = null) => {
     setSelectedBookingData(initialData);
@@ -41,6 +43,47 @@ export default function App() {
       document.body.style.overflow = previousBodyOverflow;
     };
   }, [heroIntroComplete]);
+
+  useEffect(() => {
+    if (!heroIntroComplete || openedBookingFromQuery.current) return;
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('book') !== '1') return;
+
+    openedBookingFromQuery.current = true;
+    handleOpenBooking();
+
+    params.delete('book');
+    const search = params.toString();
+    const nextUrl = `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`;
+    window.history.replaceState({}, '', nextUrl);
+  }, [heroIntroComplete]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    const sections = document.querySelectorAll(
+      '#services, #why-us, #process, #reviews, #faq'
+    );
+    sections.forEach((section) => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(section);
+    });
+
+    return () => sections.forEach((s) => observer.unobserve(s));
+  }, []);
 
   return (
     <div className="min-h-screen bg-brand-bg text-white selection:bg-brand-gold selection:text-black flex flex-col font-sans">
@@ -103,6 +146,7 @@ export default function App() {
       />
 
       <WhatsAppChatWidget hidden={bookingOpen || !heroIntroComplete} />
+      <PwaInstallBanner visible={heroIntroComplete && !bookingOpen} />
     </div>
   );
 }
