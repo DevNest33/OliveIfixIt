@@ -24,7 +24,7 @@ const brandLogos = [
   { name: 'Sony', src: sonyLogo, imgClass: 'h-7 scale-[1.55]' },
 ];
 
-export default function TrustSection() {
+export default function TrustSection({ onOpenWarranty }) {
   return (
     <section className="py-12 bg-brand-bg text-white relative overflow-hidden">
 
@@ -33,11 +33,13 @@ export default function TrustSection() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {TRUST_METRICS.map((metric, idx) => {
             const IconComponent = iconMap[metric.icon] || Wrench;
-            return (
-              <div
-                key={idx}
-                className="bg-black p-6 rounded-2xl border border-brand-gold/10 hover:border-brand-gold/40 transition-all duration-300 transform hover:-translate-y-1 group"
-              >
+            const isWarranty = metric.label === 'Warranty Covered';
+            const cardClass = isWarranty
+              ? 'bg-black p-6 rounded-2xl border border-brand-gold/10 hover:border-brand-gold/50 hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:outline-none text-left w-full'
+              : 'bg-black p-6 rounded-2xl border border-brand-gold/10 hover:border-brand-gold/40 transition-all duration-300 transform hover:-translate-y-1 group';
+
+            const card = (
+              <>
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-white/10 group-hover:bg-brand-gold text-brand-gold group-hover:text-black flex items-center justify-center transition-colors duration-300">
                     <IconComponent className="w-6 h-6" />
@@ -59,6 +61,26 @@ export default function TrustSection() {
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   {metric.suffix}
                 </div>
+              </>
+            );
+
+            if (isWarranty) {
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={onOpenWarranty}
+                  aria-label="Open warranty application"
+                  className={cardClass}
+                >
+                  {card}
+                </button>
+              );
+            }
+
+            return (
+              <div key={idx} className={cardClass}>
+                {card}
               </div>
             );
           })}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Menu, X } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 
-export default function Navbar({ onOpenBooking, visible = true }) {
+export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -70,6 +70,14 @@ export default function Navbar({ onOpenBooking, visible = true }) {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-full"></span>
               </a>
             ))}
+            <button
+              type="button"
+              onClick={() => onOpenWarranty()}
+              className="text-sm font-semibold text-gray-400 hover:text-brand-gold transition-colors relative group py-1"
+            >
+              Warranty
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-full"></span>
+            </button>
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
@@ -117,6 +125,16 @@ export default function Navbar({ onOpenBooking, visible = true }) {
                 {link.name}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenWarranty();
+              }}
+              className="text-base font-semibold text-gray-300 active:text-brand-gold py-3 border-b border-gray-800 touch-manipulation text-left"
+            >
+              Warranty
+            </button>
           </nav>
 
           <div className="pt-2 flex flex-col gap-2.5">

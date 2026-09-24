@@ -49,3 +49,49 @@ export function buildBookingWhatsAppMessage({
 
   return lines.join('\n');
 }
+
+export function buildWarrantyWhatsAppMessage({
+  customerName,
+  customerPhone,
+  deviceModel,
+  imei,
+  jobNumber,
+  repair,
+  warrantyPeriod,
+  deliveryDate,
+  validTill,
+  issue,
+  fileName,
+}) {
+  const lines = [
+    "Hi Olive iFixit, I'd like to submit a warranty application.",
+    '',
+    `Name: ${customerName}`,
+    `Phone: ${customerPhone}`,
+    `Device: ${deviceModel}`,
+  ];
+
+  if (imei?.trim()) {
+    lines.push(`IMEI / Serial: ${imei.trim()}`);
+  }
+
+  lines.push(
+    `Job / Invoice: ${jobNumber}`,
+    `Repair / Service: ${repair}`,
+    `Warranty Period: ${warrantyPeriod}`,
+    `Delivery Date: ${deliveryDate}`,
+    `Warranty Valid Till: ${validTill}`,
+    `Issue: ${issue}`,
+  );
+
+  if (fileName) {
+    lines.push(
+      `Warranty card / invoice file: ${fileName}`,
+      'I will send the photo in this chat.',
+    );
+  }
+
+  lines.push('', 'Please review my warranty request. Thank you!');
+
+  return lines.join('\n');
+}

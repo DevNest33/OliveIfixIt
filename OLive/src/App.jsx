@@ -10,11 +10,13 @@ import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 import SectionDivider from './components/SectionDivider';
 import BookingModal from './components/BookingModal';
+import WarrantyModal from './components/WarrantyModal';
 import WhatsAppChatWidget from './components/WhatsAppChatWidget';
 import PwaInstallBanner from './components/PwaInstallBanner';
 
 export default function App() {
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [warrantyOpen, setWarrantyOpen] = useState(false);
   const [selectedBookingData, setSelectedBookingData] = useState(null);
   const [heroIntroComplete, setHeroIntroComplete] = useState(false);
   const openedBookingFromQuery = useRef(false);
@@ -23,6 +25,10 @@ export default function App() {
     setSelectedBookingData(initialData);
     setBookingOpen(true);
   };
+
+  const handleCloseWarranty = useCallback(() => {
+    setWarrantyOpen(false);
+  }, []);
 
   const handleIntroComplete = useCallback(() => {
     setHeroIntroComplete(true);
@@ -90,6 +96,7 @@ export default function App() {
       <Navbar
         visible={heroIntroComplete}
         onOpenBooking={() => handleOpenBooking()}
+        onOpenWarranty={() => setWarrantyOpen(true)}
       />
 
       <main className="flex-grow">
@@ -104,7 +111,7 @@ export default function App() {
           }`}
           aria-hidden={!heroIntroComplete}
         >
-          <TrustSection />
+          <TrustSection onOpenWarranty={() => setWarrantyOpen(true)} />
 
           <SectionDivider />
 
@@ -145,8 +152,13 @@ export default function App() {
         initialSelection={selectedBookingData}
       />
 
-      <WhatsAppChatWidget hidden={bookingOpen || !heroIntroComplete} />
-      <PwaInstallBanner visible={heroIntroComplete && !bookingOpen} />
+      <WarrantyModal
+        isOpen={warrantyOpen}
+        onClose={handleCloseWarranty}
+      />
+
+      <WhatsAppChatWidget hidden={bookingOpen || warrantyOpen || !heroIntroComplete} />
+      <PwaInstallBanner visible={heroIntroComplete && !bookingOpen && !warrantyOpen} />
     </div>
   );
 }
