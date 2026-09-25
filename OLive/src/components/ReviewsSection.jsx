@@ -1,6 +1,6 @@
 import React from 'react';
-import { CUSTOMER_REVIEWS } from '../data/repairData';
-import { Star, CheckCircle, Quote, ThumbsUp } from 'lucide-react';
+import { CUSTOMER_REVIEWS, GOOGLE_WRITE_REVIEW_URL } from '../data/repairData';
+import { Star, CheckCircle, Quote, ThumbsUp, PenLine } from 'lucide-react';
 import { BrandMark } from './BrandLogo';
 
 export default function ReviewsSection() {
@@ -37,6 +37,15 @@ export default function ReviewsSection() {
               {f.label}
             </button>
           ))}
+          <a
+            href={GOOGLE_WRITE_REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-brand-gold border border-brand-gold/40 hover:bg-brand-gold hover:text-black transition-colors"
+          >
+            <PenLine className="w-3.5 h-3.5" />
+            Write a Review on Google
+          </a>
         </div>
 
         <div className="mt-12 grid md:grid-cols-2 gap-8">

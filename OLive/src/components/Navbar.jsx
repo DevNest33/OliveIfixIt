@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Menu, X } from 'lucide-react';
+import { Calendar, Menu, X, PenLine } from 'lucide-react';
+import { GOOGLE_WRITE_REVIEW_URL } from '../data/repairData';
 import BrandLogo from './BrandLogo';
 
 export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }) {
@@ -33,7 +34,6 @@ export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }
     { name: 'Why Olive ifixit', href: '#why-us' },
     { name: 'Repair Process', href: '#process' },
     { name: 'Reviews', href: '#reviews' },
-    { name: 'FAQ', href: '#faq' },
   ];
 
   return (
@@ -59,12 +59,12 @@ export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }
             <BrandLogo size="lg" showTagline />
           </a>
 
-          <nav className="hidden lg:flex items-center space-x-7">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-7">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm font-semibold text-gray-400 hover:text-brand-gold transition-colors relative group py-1"
+                className="text-sm font-semibold text-gray-400 hover:text-brand-gold transition-colors relative group py-1 whitespace-nowrap"
               >
                 {link.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-full"></span>
@@ -73,7 +73,7 @@ export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }
             <button
               type="button"
               onClick={() => onOpenWarranty()}
-              className="text-sm font-semibold text-gray-400 hover:text-brand-gold transition-colors relative group py-1"
+              className="text-sm font-semibold text-gray-400 hover:text-brand-gold transition-colors relative group py-1 whitespace-nowrap"
             >
               Warranty
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-full"></span>
@@ -81,6 +81,17 @@ export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
+            <a
+              href={GOOGLE_WRITE_REVIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Write a review on Google"
+              title="Write a review on Google"
+              className="px-3.5 xl:px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 text-brand-gold border border-brand-gold/40 hover:bg-brand-gold hover:text-black transition-colors"
+            >
+              <PenLine className="w-4 h-4" />
+              <span className="lg:hidden xl:inline">Write a Review</span>
+            </a>
             <button
               onClick={() => onOpenBooking()}
               className="gold-gradient-btn px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 cursor-pointer"
@@ -148,6 +159,16 @@ export default function Navbar({ onOpenBooking, onOpenWarranty, visible = true }
               <Calendar className="w-4 h-4" />
               Book Repair Now
             </button>
+            <a
+              href={GOOGLE_WRITE_REVIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 text-brand-gold border border-brand-gold/40 active:bg-brand-gold active:text-black transition-colors touch-manipulation"
+            >
+              <PenLine className="w-4 h-4" />
+              Write a Review on Google
+            </a>
           </div>
         </div>
       )}

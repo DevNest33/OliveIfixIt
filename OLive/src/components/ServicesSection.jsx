@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { REPAIR_ISSUES } from '../data/repairData';
 import {
   Smartphone, BatteryCharging, Zap, Droplets, Camera, Volume2, Cpu, Database,
   ArrowRight, Clock, ShieldCheck, Check
 } from 'lucide-react';
 import { BrandMark } from './BrandLogo';
-import crackedScreenHover from '../assets/services/cracked-screen.jpg';
-import batteryReplacementHover from '../assets/services/battery-replacement.jpg';
-import chargingPortHover from '../assets/services/charging-port.jpg';
-import waterDamageHover from '../assets/services/water-damage.jpg';
-import cameraLensHover from '../assets/services/camera-lens.jpg';
-import speakerMicrophoneHover from '../assets/services/speaker-microphone.jpg';
-import softwareDiagnosticsHover from '../assets/services/software-diagnostics.jpg';
-import dataRecoveryHover from '../assets/services/data-recovery.jpg';
+import crackedScreenVideo from '../assets/services/videos/cracked-screen.mp4';
+import batteryReplacementVideo from '../assets/services/videos/battery-replacement.mp4';
+import chargingPortVideo from '../assets/services/videos/charging-port.mp4';
+import waterDamageVideo from '../assets/services/videos/water-damage.mp4';
+import cameraLensImage from '../assets/services/camera-lens.webp';
+import speakerMicrophoneVideo from '../assets/services/videos/speaker-microphone.mp4';
+import softwareDiagnosticsVideo from '../assets/services/videos/software-diagnostics.mp4';
+import dataRecoveryVideo from '../assets/services/videos/data-recovery.mp4';
 
-const SERVICE_HOVER_IMAGES = {
-  screen: { src: crackedScreenHover, position: 'object-[center_70%]' },
-  battery: { src: batteryReplacementHover, position: 'object-center' },
-  charging: { src: chargingPortHover, position: 'object-[58%_48%]' },
-  water: { src: waterDamageHover, position: 'object-[55%_58%]' },
-  camera: { src: cameraLensHover, position: 'object-[58%_52%]' },
-  speaker: { src: speakerMicrophoneHover, position: 'object-[58%_50%]' },
-  software: { src: softwareDiagnosticsHover, position: 'object-[center_42%]' },
-  data: { src: dataRecoveryHover, position: 'object-[center_48%]' },
+const SERVICE_VIDEOS = {
+  screen: crackedScreenVideo,
+  battery: batteryReplacementVideo,
+  charging: chargingPortVideo,
+  water: waterDamageVideo,
+  speaker: speakerMicrophoneVideo,
+  software: softwareDiagnosticsVideo,
+  data: dataRecoveryVideo,
+};
+
+// Still photos get a slow zoom so they move like the video cards.
+const SERVICE_IMAGES = {
+  camera: cameraLensImage,
 };
 
 const iconComponents = {
@@ -37,19 +41,28 @@ const iconComponents = {
 };
 
 export default function ServicesSection({ onSelectService }) {
-  const [activeTab, setActiveTab] = useState('all');
+  const gridRef = useRef(null);
 
-  const tabs = [
-    { id: 'all', label: 'All Repairs' },
-    { id: 'popular', label: 'Most Popular' },
-    { id: 'express', label: 'Express Service' },
-  ];
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
 
-  const filteredServices = REPAIR_ISSUES.filter((item) => {
-    if (activeTab === 'popular') return item.popular;
-    if (activeTab === 'express') return item.timeEst.includes('mins') || item.timeEst.includes('Min');
-    return true;
-  });
+    const videos = () => grid.querySelectorAll('video');
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[entries.length - 1];
+      videos().forEach((video) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+
+    observer.observe(grid);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section id="services" className="py-20 bg-brand-bg relative">
@@ -68,44 +81,42 @@ export default function ServicesSection({ onSelectService }) {
           </p>
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-2 flex-wrap">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-                activeTab === tab.id
-                  ? 'bg-brand-gold text-black shadow-md'
-                  : 'bg-gray-900 text-gray-400 hover:bg-gray-800 border border-gray-800'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredServices.map((service) => {
+        <div ref={gridRef} className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {REPAIR_ISSUES.map((service) => {
             const Icon = iconComponents[service.icon] || Smartphone;
-            const hoverImage = SERVICE_HOVER_IMAGES[service.id];
+            const video = SERVICE_VIDEOS[service.id];
+            const image = SERVICE_IMAGES[service.id];
+            const hasMedia = Boolean(video || image);
             return (
               <div
                 key={service.id}
                 className="bg-gray-900 rounded-2xl p-6 border border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between group relative overflow-hidden"
               >
-                {hoverImage && (
-                  <>
-                    <img
-                      src={hoverImage.src}
-                      alt=""
-                      aria-hidden="true"
-                      className={`absolute inset-0 h-full w-full object-cover ${hoverImage.position} opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100 pointer-events-none`}
-                    />
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/20 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
-                    />
-                  </>
+                {video && (
+                  <video
+                    src={video}
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full object-cover opacity-40 scale-105 transition-all duration-700 ease-out group-hover:opacity-75 group-hover:scale-100 pointer-events-none"
+                  />
+                )}
+                {image && (
+                  <img
+                    src={image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover opacity-40 transition-opacity duration-700 ease-out group-hover:opacity-75 motion-safe:animate-slow-zoom pointer-events-none"
+                  />
+                )}
+                {hasMedia && (
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent pointer-events-none"
+                  />
                 )}
 
                 {service.popular && (
@@ -123,13 +134,13 @@ export default function ServicesSection({ onSelectService }) {
                     {service.title}
                   </h3>
                   <p className={`text-sm mt-2 font-normal leading-relaxed transition-colors duration-500 ${
-                    hoverImage ? 'text-gray-500 group-hover:text-gray-200' : 'text-gray-500'
+                    hasMedia ? 'text-gray-500 group-hover:text-gray-200' : 'text-gray-500'
                   }`}>
                     {service.desc}
                   </p>
                 </div>
 
-                <div className={`relative z-10 mt-6 pt-5 ${hoverImage ? 'border-t border-gray-800 group-hover:border-white/10' : 'border-t border-gray-800'}`}>
+                <div className={`relative z-10 mt-6 pt-5 ${hasMedia ? 'border-t border-gray-800 group-hover:border-white/10' : 'border-t border-gray-800'}`}>
                   <button
                     onClick={() => onSelectService(service)}
                     className="w-full py-2.5 rounded-xl font-bold text-sm bg-gray-800 text-brand-gold group-hover:bg-brand-gold group-hover:text-black transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-sm"

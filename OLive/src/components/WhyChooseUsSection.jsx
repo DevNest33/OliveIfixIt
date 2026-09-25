@@ -66,11 +66,11 @@ export default function WhyChooseUsSection({ onOpenBooking }) {
                       src={hoverImage.src}
                       alt=""
                       aria-hidden="true"
-                      className={`absolute inset-0 h-full w-full object-cover ${hoverImage.position} opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100 pointer-events-none`}
+                      className={`absolute inset-0 h-full w-full object-cover ${hoverImage.position} opacity-40 scale-105 transition-all duration-700 ease-out group-hover:opacity-75 group-hover:scale-100 pointer-events-none`}
                     />
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/25 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
+                      className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent pointer-events-none"
                     />
                   </>
                 )}

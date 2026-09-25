@@ -54,8 +54,13 @@ export default {
         'border-glow': 'border-glow 2s ease-in-out infinite',
         'marquee': 'marquee 30s linear infinite',
         'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
+        'slow-zoom': 'slow-zoom 12s ease-in-out infinite alternate',
       },
       keyframes: {
+        'slow-zoom': {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1.12)' },
+        },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-12px)' },

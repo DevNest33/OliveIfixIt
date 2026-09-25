@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import TrustSection from './components/TrustSection';
 import ServicesSection from './components/ServicesSection';
+import ContactSection from './components/ContactSection';
 import WhyChooseUsSection from './components/WhyChooseUsSection';
 import ProcessSection from './components/ProcessSection';
 import ReviewsSection from './components/ReviewsSection';
@@ -132,6 +133,8 @@ export default function App() {
           <ReviewsSection />
 
           <FAQSection />
+
+          <ContactSection />
         </div>
       </main>
 

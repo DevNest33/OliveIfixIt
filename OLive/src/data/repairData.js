@@ -316,3 +316,5 @@ export const FAQS = [
     answer: 'You can bring your device directly to our service centre, or use our pickup service. Pickup is free within 5 km of our centre. For locations beyond 5 km, an additional pickup fee may apply based on the distance.'
   }
 ];
+
+export const GOOGLE_WRITE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJ91V0Kt-XyzsRqRDYBCp1wp0';

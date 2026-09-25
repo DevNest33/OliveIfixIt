@@ -1,13 +1,6 @@
 import React from 'react';
 import { TRUST_METRICS } from '../data/repairData';
 import { Wrench, Star, Clock, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import appleLogo from '../assets/brands/apple.png';
-import samsungLogo from '../assets/brands/samsung.png';
-import hpLogo from '../assets/brands/hp.png';
-import dellLogo from '../assets/brands/dell.png';
-import lenovoLogo from '../assets/brands/lenovo.png';
-import sonyLogo from '../assets/brands/sony.png';
-
 const iconMap = {
   Wrench,
   Star,
@@ -15,13 +8,59 @@ const iconMap = {
   ShieldCheck
 };
 
-const brandLogos = [
-  { name: 'Apple', src: appleLogo, imgClass: 'h-8' },
-  { name: 'Samsung', src: samsungLogo, imgClass: 'h-6' },
-  { name: 'HP', src: hpLogo, imgClass: 'h-9' },
-  { name: 'Dell', src: dellLogo, imgClass: 'h-6' },
-  { name: 'Lenovo', src: lenovoLogo, imgClass: 'h-7 scale-[1.65]' },
-  { name: 'Sony', src: sonyLogo, imgClass: 'h-7 scale-[1.55]' },
+const logoFiles = import.meta.glob('../assets/brands/*.png', { eager: true, import: 'default' });
+const logo = (file) => logoFiles[`../assets/brands/${file}.png`];
+
+// Heights balance the logos visually: wide wordmarks sit shorter than square marks.
+const WORDMARK = 'h-4 sm:h-5';
+const MEDIUM = 'h-6 sm:h-7';
+const SQUARE = 'h-7 sm:h-8';
+
+const brandGroups = [
+  {
+    label: 'Phones & Tablets',
+    brands: [
+      { name: 'Apple', file: 'apple', size: SQUARE },
+      { name: 'Samsung', file: 'samsung', size: 'h-3.5 sm:h-4' },
+      { name: 'Google', file: 'google', size: SQUARE },
+      { name: 'Android', file: 'android', size: MEDIUM },
+      { name: 'Motorola', file: 'motorola', size: SQUARE },
+      { name: 'Xiaomi / Redmi', file: 'xiaomi', size: SQUARE },
+      { name: 'OnePlus', file: 'oneplus', size: SQUARE },
+      { name: 'Oppo', file: 'oppo', size: WORDMARK },
+      { name: 'Vivo', file: 'vivo', size: WORDMARK },
+      { name: 'Huawei', file: 'huawei', size: MEDIUM },
+      { name: 'Nokia', file: 'nokia', size: WORDMARK },
+      { name: 'LG', file: 'lg', size: MEDIUM },
+      { name: 'HTC', file: 'htc', size: WORDMARK },
+      { name: 'BlackBerry', file: 'blackberry', size: MEDIUM },
+    ],
+  },
+  {
+    label: 'Laptops & PCs',
+    brands: [
+      { name: 'HP', file: 'hp', size: SQUARE },
+      { name: 'Dell', file: 'dell', size: SQUARE },
+      { name: 'Lenovo', file: 'lenovo', size: WORDMARK },
+      { name: 'Acer', file: 'acer', size: WORDMARK },
+      { name: 'Asus', file: 'asus', size: WORDMARK },
+      { name: 'MSI', file: 'msi', size: SQUARE },
+      { name: 'Republic of Gamers', file: 'republicofgamers', size: MEDIUM },
+      { name: 'BenQ', file: 'benq', size: WORDMARK },
+      { name: 'Nvidia', file: 'nvidia', size: MEDIUM },
+      { name: 'AMD', file: 'amd', size: WORDMARK },
+      { name: 'Linux', file: 'linux', size: SQUARE },
+    ],
+  },
+  {
+    label: 'Consoles',
+    brands: [
+      { name: 'Sony', file: 'sony', size: 'h-3.5 sm:h-4' },
+      { name: 'PlayStation', file: 'playstation', size: MEDIUM },
+      { name: 'Xbox', file: 'xbox', size: SQUARE },
+      { name: 'Nintendo', file: 'nintendo', size: WORDMARK },
+    ],
+  },
 ];
 
 export default function TrustSection({ onOpenWarranty }) {
@@ -86,8 +125,8 @@ export default function TrustSection({ onOpenWarranty }) {
           })}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left">
+        <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="text-center">
             <h4 className="text-xs uppercase font-extrabold tracking-widest text-brand-gold">
               Brand Compatibility
             </h4>
@@ -96,17 +135,25 @@ export default function TrustSection({ onOpenWarranty }) {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {brandLogos.map((brand) => (
-              <div
-                key={brand.name}
-                className="h-12 w-[92px] sm:w-24 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center px-3 overflow-hidden hover:bg-white/[0.08] hover:border-white/20 transition-colors"
-              >
-                <img
-                  src={brand.src}
-                  alt={`${brand.name} logo`}
-                  className={`w-auto max-w-full object-contain ${brand.imgClass}`}
-                />
+          <div className="mt-8 space-y-8">
+            {brandGroups.map((group) => (
+              <div key={group.label}>
+                <p className="text-center text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-4">
+                  {group.label}
+                </p>
+                <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-6 sm:gap-x-12">
+                  {group.brands.map((brand) => (
+                    <li key={brand.name} className="flex items-center">
+                      <img
+                        src={logo(brand.file)}
+                        alt={`${brand.name} logo`}
+                        title={brand.name}
+                        loading="lazy"
+                        className={`w-auto object-contain transition-transform hover:scale-110 ${brand.size}`}
+                      />
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>

@@ -1,6 +1,29 @@
 // Country code included, no + or spaces — update with your real WhatsApp number
 export const WHATSAPP_NUMBER = '918019349487';
 
+export const STORE = {
+  name: 'OliveCare – Gadget Repair & Service Centre',
+  addressLines: [
+    '4/101, 8-2-684/I, Road No. 12,',
+    'Kaushik Society, Bhavani Nagar,',
+    'Banjara Hills, Hyderabad,',
+    'Telangana 500034',
+  ],
+  landmark: 'Beside Almond House, Road No. 12',
+  hours: 'Mon – Sat: 10:00 AM – 7:00 PM',
+  closed: 'Sunday: Closed',
+  phoneDisplay: '090637 59757',
+  phoneHref: 'tel:+919063759757',
+  placeId: 'ChIJ91V0Kt-XyzsRqRDYBCp1wp0',
+};
+
+const STORE_QUERY = encodeURIComponent(
+  'OliveCare - Gadget Repair and Service Centre, Banjara Hills, Hyderabad',
+);
+
+export const STORE_MAP_EMBED_URL = `https://maps.google.com/maps?q=${STORE_QUERY}&z=16&output=embed`;
+export const STORE_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${STORE_QUERY}&destination_place_id=${STORE.placeId}`;
+
 export const WHATSAPP_DEFAULT_MESSAGE =
   'Hi Olive ifixit, I need help with a repair. My device is ';
 
