@@ -26,6 +26,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
   const [notes, setNotes] = useState('');
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const resetForm = useCallback(() => {
     setStep(1);
@@ -71,22 +72,57 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
     ? ['Device & Issue', 'Service Mode', 'Pickup Address', 'Confirm']
     : ['Device & Issue', 'Service Mode', 'Confirm'];
 
-  const validateStep1 = () => {
-    if (!modelInput.trim()) return false;
-    if (issueId === 'other' && customIssueText.trim().length < 10) return false;
-    return true;
+  const isValidPhone = (value) => /^\d{10}$/.test(value);
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+  const clearError = (key) => {
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
+
+  const handlePhoneChange = (e) => {
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+    setCustomerPhone(digits);
+    if (isValidPhone(digits)) clearError('phone');
+  };
+
+  const showPhoneError = () => {
+    if (isValidPhone(customerPhone)) {
+      clearError('phone');
+      return;
+    }
+    setErrors((prev) => ({ ...prev, phone: 'Enter a 10-digit mobile number.' }));
   };
 
   const handleNextFromStep1 = () => {
-    if (validateStep1()) setStep(2);
+    if (!modelInput.trim()) {
+      setErrors({ model: 'Enter your device model.' });
+      return;
+    }
+    if (issueId === 'other' && customIssueText.trim().length < 10) {
+      setErrors({ issue: 'Describe the problem in at least 10 characters.' });
+      return;
+    }
+    setErrors({});
+    setStep(2);
   };
 
   const handleNextFromStep2 = () => {
+    setErrors({});
     setStep(3);
   };
 
   const handleNextFromAddress = () => {
-    if (deliveryAddress.trim().length >= 15) setStep(4);
+    if (deliveryAddress.trim().length < 15) {
+      setErrors({ address: 'Enter a full pickup address (at least 15 characters).' });
+      return;
+    }
+    setErrors({});
+    setStep(4);
   };
 
   const handleBackFromConfirm = () => {
@@ -94,8 +130,17 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
     else setStep(2);
   };
 
-  const handleSubmitBooking = (e) => {
-    e.preventDefault();
+  const showContactErrors = () => {
+    const next = {};
+    if (!customerName.trim()) next.name = 'Enter your full name.';
+    if (!isValidEmail(customerEmail)) next.email = 'Enter a valid email address.';
+    if (!isValidPhone(customerPhone)) next.phone = 'Enter a 10-digit mobile number.';
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const openWhatsAppBooking = () => {
+    if (!isConfirmStep || !showContactErrors()) return;
 
     const message = buildBookingWhatsAppMessage({
       categoryName,
@@ -118,6 +163,38 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
       spread: 70,
       origin: { y: 0.6 }
     });
+  };
+
+  const handleSubmitBooking = (e) => {
+    e.preventDefault();
+    openWhatsAppBooking();
+  };
+
+  const handleFormKeyDown = (e) => {
+    if (e.key !== 'Enter') return;
+    if (e.target.tagName === 'TEXTAREA') return;
+    if (e.target.closest('button')) return;
+
+    e.preventDefault();
+
+    if (step === 1) {
+      handleNextFromStep1();
+      return;
+    }
+
+    if (step === 2) {
+      handleNextFromStep2();
+      return;
+    }
+
+    if (step === 3 && serviceMode === 'delivery') {
+      handleNextFromAddress();
+      return;
+    }
+
+    if (isConfirmStep) {
+      openWhatsAppBooking();
+    }
   };
 
   return (
@@ -231,7 +308,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmitBooking} className="pb-2">
+            <form noValidate onSubmit={handleSubmitBooking} onKeyDown={handleFormKeyDown} className="pb-2">
 
               {step === 1 && (
                 <div className="space-y-5">
@@ -262,9 +339,18 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                       required
                       placeholder="e.g. iPhone 14 Pro, Galaxy S23"
                       value={modelInput}
-                      onChange={(e) => setModelInput(e.target.value)}
-                      className="w-full p-3.5 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-gray-200 focus:ring-2 focus:ring-brand-gold"
+                      onChange={(e) => {
+                        setModelInput(e.target.value);
+                        if (e.target.value.trim()) clearError('model');
+                      }}
+                      aria-invalid={Boolean(errors.model)}
+                      className={`w-full p-3.5 bg-gray-800 border rounded-xl text-sm font-semibold text-gray-200 focus:ring-2 focus:ring-brand-gold ${
+                        errors.model ? 'border-red-500' : 'border-gray-700'
+                      }`}
                     />
+                    {errors.model && (
+                      <p role="alert" className="text-[11px] text-red-400 mt-1.5 font-medium">{errors.model}</p>
+                    )}
                   </div>
 
                   <div>
@@ -304,12 +390,22 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                         required
                         placeholder="e.g. Speaker crackles during calls, device overheats while charging..."
                         value={customIssueText}
-                        onChange={(e) => setCustomIssueText(e.target.value)}
-                        className="w-full p-3.5 bg-gray-800 border border-gray-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold"
+                        onChange={(e) => {
+                          setCustomIssueText(e.target.value);
+                          if (e.target.value.trim().length >= 10) clearError('issue');
+                        }}
+                        aria-invalid={Boolean(errors.issue)}
+                        className={`w-full p-3.5 bg-gray-800 border rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold ${
+                          errors.issue ? 'border-red-500' : 'border-gray-700'
+                        }`}
                       />
-                      <p className="text-[11px] text-gray-500 mt-1.5">
-                        Tell us what&apos;s wrong so our technician can prepare the right parts and tools.
-                      </p>
+                      {errors.issue ? (
+                        <p role="alert" className="text-[11px] text-red-400 mt-1.5 font-medium">{errors.issue}</p>
+                      ) : (
+                        <p className="text-[11px] text-gray-500 mt-1.5">
+                          Tell us what&apos;s wrong so our technician can prepare the right parts and tools.
+                        </p>
+                      )}
                     </div>
                   )}
 
@@ -320,8 +416,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                   <button
                     type="button"
                     onClick={handleNextFromStep1}
-                    disabled={!validateStep1()}
-                    className="w-full gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                    className="w-full gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 touch-manipulation"
                   >
                     Next: Service Mode <ArrowRight className="w-4 h-4" />
                   </button>
@@ -398,12 +493,22 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                       required
                       placeholder="House/flat no., street, landmark, area, pin code"
                       value={deliveryAddress}
-                      onChange={(e) => setDeliveryAddress(e.target.value)}
-                      className="w-full p-3.5 bg-gray-800 border border-gray-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold"
+                      onChange={(e) => {
+                        setDeliveryAddress(e.target.value);
+                        if (e.target.value.trim().length >= 15) clearError('address');
+                      }}
+                      aria-invalid={Boolean(errors.address)}
+                      className={`w-full p-3.5 bg-gray-800 border rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-gold ${
+                        errors.address ? 'border-red-500' : 'border-gray-700'
+                      }`}
                     />
-                    <p className="text-[11px] text-gray-500 mt-1.5">
-                      We&apos;ll pick up and return your device to this address (free within 5 km).
-                    </p>
+                    {errors.address ? (
+                      <p role="alert" className="text-[11px] text-red-400 mt-1.5 font-medium">{errors.address}</p>
+                    ) : (
+                      <p className="text-[11px] text-gray-500 mt-1.5">
+                        We&apos;ll pick up and return your device to this address (free within 5 km).
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 pt-2">
@@ -418,8 +523,7 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                     <button
                       type="button"
                       onClick={handleNextFromAddress}
-                      disabled={deliveryAddress.trim().length < 15}
-                      className="w-full sm:w-auto gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                      className="w-full sm:w-auto gold-gradient-btn px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 touch-manipulation"
                     >
                       Next: Confirm <ArrowRight className="w-4 h-4" />
                     </button>
@@ -441,10 +545,19 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                           required
                           placeholder="e.g. Alex Johnson"
                           value={customerName}
-                          onChange={(e) => setCustomerName(e.target.value)}
-                          className="w-full pl-9 pr-3 py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold"
+                          onChange={(e) => {
+                            setCustomerName(e.target.value);
+                            if (e.target.value.trim()) clearError('name');
+                          }}
+                          aria-invalid={Boolean(errors.name)}
+                          className={`w-full pl-9 pr-3 py-3 bg-gray-800 border rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold ${
+                            errors.name ? 'border-red-500' : 'border-gray-700'
+                          }`}
                         />
                       </div>
+                      {errors.name && (
+                        <p role="alert" className="text-[11px] text-red-400 mt-1.5 font-medium">{errors.name}</p>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -457,10 +570,19 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                             required
                             placeholder="alex@example.com"
                             value={customerEmail}
-                            onChange={(e) => setCustomerEmail(e.target.value)}
-                            className="w-full pl-9 pr-3 py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold"
+                            onChange={(e) => {
+                              setCustomerEmail(e.target.value);
+                              if (isValidEmail(e.target.value)) clearError('email');
+                            }}
+                            aria-invalid={Boolean(errors.email)}
+                            className={`w-full pl-9 pr-3 py-3 bg-gray-800 border rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold ${
+                              errors.email ? 'border-red-500' : 'border-gray-700'
+                            }`}
                           />
                         </div>
+                        {errors.email && (
+                          <p role="alert" className="text-[11px] text-red-400 mt-1.5 font-medium">{errors.email}</p>
+                        )}
                       </div>
 
                       <div>
@@ -469,13 +591,25 @@ export default function BookingModal({ isOpen, onClose, initialSelection }) {
                           <Phone className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                           <input
                             type="tel"
+                            inputMode="numeric"
                             required
-                            placeholder="+91 80193 49487"
+                            maxLength={10}
+                            pattern="[0-9]{10}"
+                            placeholder="8019349487"
                             value={customerPhone}
-                            onChange={(e) => setCustomerPhone(e.target.value)}
-                            className="w-full pl-9 pr-3 py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold"
+                            onChange={handlePhoneChange}
+                            onBlur={showPhoneError}
+                            aria-invalid={Boolean(errors.phone)}
+                            className={`w-full pl-9 pr-3 py-3 bg-gray-800 border rounded-xl text-sm font-semibold text-white focus:ring-2 focus:ring-brand-gold ${
+                              errors.phone ? 'border-red-500' : 'border-gray-700'
+                            }`}
                           />
                         </div>
+                        {errors.phone ? (
+                          <p role="alert" className="text-[11px] text-red-400 mt-1.5 font-medium">{errors.phone}</p>
+                        ) : (
+                          <p className="text-[11px] text-gray-500 mt-1.5">10-digit mobile number</p>
+                        )}
                       </div>
                     </div>
 
